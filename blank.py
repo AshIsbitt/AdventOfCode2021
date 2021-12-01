@@ -6,12 +6,25 @@ def main(filename:str) -> int:
     with open(filename) as inputData:
         rawData = inputData.readlines()
 
+    # data = list(map(int, rawData))
+
     return 0
 
 
 if __name__ == '__main__':
-    raise SystemExit(main('Inputs_1/day1.txt'))
+    raise SystemExit(main('input_ff/day1.txt'))
+    # raise SystemExit(main('input_sri/day1.txt'))
 
 
 #Tests
+test_data = []
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    (
+        (test_data, 0)
+    )
+)
+def test_f(input_data:list[int], expected:int) -> None:
+    assert f(input_data) == expected
 
