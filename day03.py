@@ -7,6 +7,20 @@
 import pytest
 
 
+def binaryCount(rawData: list[str]) -> list[int]:
+    counter = [0] * (len(rawData[0]))
+
+    for item in rawData:
+        charItem = list(item)
+
+        for i, char in enumerate(charItem):
+            if char == "1":
+                counter[i] += 1
+                print(counter)
+
+    return counter
+
+
 def lifeSupportRating(rawData: list[str]) -> int:
     o2Rate: int = 0
     co2ScrubRate: int = 0
@@ -18,15 +32,7 @@ def getGammaEpsilonCount(rawData: list[str]) -> int:
     gamma: str = ""
     epsilon: str = ""
 
-    counter = [0] * (len(rawData[0]))
-
-    for item in rawData:
-        charItem = list(item)
-
-        for i, char in enumerate(charItem):
-            if char == "1":
-                counter[i] += 1
-                print(counter)
+    counter = binaryCount(rawData)
 
     for val in counter:
         if val >= (len(rawData) / 2):
