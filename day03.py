@@ -14,7 +14,7 @@ def lifeSupportRating(rawData: list[str]) -> int:
     return o2Rate * co2ScrubRate
 
 
-def get_gamma_epsilon(rawData: list[str]) -> int:
+def getGammaEpsilonCount(rawData: list[str]) -> int:
     gamma: str = ""
     epsilon: str = ""
 
@@ -48,7 +48,7 @@ def main(filename: str) -> int:
 
     rawData = [line.rstrip("\n") for line in rawData]
 
-    totalRates = get_gamma_epsilon(rawData)
+    totalRates = getGammaEpsilonCount(rawData)
     print(f"Part 1: {totalRates}")
 
     return 0
@@ -77,8 +77,8 @@ test_data = [
 
 
 @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 198),))
-def test_get_gamma_epsilon(input_data: list[str], expected: int) -> None:
-    assert get_gamma_epsilon(input_data) == expected
+def test_getGammaEpsilonCount(input_data: list[str], expected: int) -> None:
+    assert getGammaEpsilonCount(input_data) == expected
 
 
 @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 230),))
