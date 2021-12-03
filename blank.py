@@ -5,7 +5,9 @@ import pytest
 def main(filename: str) -> int:
     with open(filename) as inputData:
         rawData = inputData.readlines()
+    rawData = [line.rstrip("\n") for line in rawData]
 
+    # Convert to ints
     # data = list(map(int, rawData))
 
     return 0
@@ -20,6 +22,13 @@ if __name__ == "__main__":
 test_data = []
 
 
-@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0)))
+# Part 1 test
+@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
+def test_f(input_data: list[int], expected: int) -> None:
+    assert f(input_data) == expected
+
+
+# Part 2 test
+@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
 def test_f(input_data: list[int], expected: int) -> None:
     assert f(input_data) == expected
