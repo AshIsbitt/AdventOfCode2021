@@ -1,14 +1,24 @@
 # Part 1: Use the binary numbers in your diagnostic report to calculate the
 # gamma rate and epsilon rate, then multiply them together. What is the power
 # consumption of the submarine?
+# Part 2: Use the binary numbers in your diagnostic report to calculate the
+# oxygen generator rating and CO2 scrubber rating, then multiply them together.
+# What is the life support rating of the submarine?
 import pytest
+
+
+def lifeSupportRating(rawData: list[str]) -> int:
+    o2Rate: int = 0
+    co2ScrubRate: int = 0
+
+    return o2Rate * co2ScrubRate
 
 
 def get_gamma_epsilon(rawData: list[str]) -> int:
     gamma: str = ""
     epsilon: str = ""
 
-    counter = [0] * (len(rawData[0]) - 1)
+    counter = [0] * (len(rawData[0]))
 
     for item in rawData:
         charItem = list(item)
@@ -16,6 +26,7 @@ def get_gamma_epsilon(rawData: list[str]) -> int:
         for i, char in enumerate(charItem):
             if char == "1":
                 counter[i] += 1
+                print(counter)
 
     for val in counter:
         if val >= (len(rawData) / 2):
@@ -35,6 +46,8 @@ def main(filename: str) -> int:
     with open(filename) as inputData:
         rawData = inputData.readlines()
 
+    rawData = [line.rstrip("\n") for line in rawData]
+
     totalRates = get_gamma_epsilon(rawData)
     print(f"Part 1: {totalRates}")
 
@@ -42,8 +55,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day03.txt"))
-    raise SystemExit(main("input_sri/day03.txt"))
+    raise SystemExit(main("input_ff/day03.txt"))
+    # raise SystemExit(main("input_sri/day03.txt"))
 
 
 # Tests
@@ -66,3 +79,8 @@ test_data = [
 @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 198),))
 def test_get_gamma_epsilon(input_data: list[str], expected: int) -> None:
     assert get_gamma_epsilon(input_data) == expected
+
+
+@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 230),))
+def test_lifeSupportRating(input_data: list[str], expected: int) -> None:
+    assert lifeSupportRating(input_data) == expected
