@@ -30,9 +30,10 @@ def lifeSupportRating(rawData: list[str], flip: bool = False) -> int:
         # List of sets for each bit
         pivotData = list(zip(*rawData))
 
-        if len(rawData) <= 2:
+        if len(rawData) < 3:
             if flip:
-                rawData = [i for i in rawData if i[-1] == "0"]
+                if len(rawData) != 1:
+                    rawData = [i for i in rawData if i[-1] == "0"]
             else:
                 rawData = [i for i in rawData if i[-1] == "1"]
 
@@ -44,7 +45,11 @@ def lifeSupportRating(rawData: list[str], flip: bool = False) -> int:
             cb = max(pivotData[index], key=pivotData[index].count)
         else:
             # Carbon
-            cb = min(pivotData[index], key=pivotData[index].count)
+            cb = (
+                "0"
+                if pivotData[index].count("0") <= pivotData[index].count("1")
+                else "1"
+            )
 
         rawData = [item for item in rawData if item[index] == cb]
 
@@ -90,8 +95,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day03.txt"))
-    raise SystemExit(main("input_sri/day03.txt"))
+    raise SystemExit(main("input_ff/day03.txt"))
+    # raise SystemExit(main("input_sri/day03.txt"))
 
 
 # Tests
