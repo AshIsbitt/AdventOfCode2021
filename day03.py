@@ -16,16 +16,39 @@ def binaryCount(rawData: list[str]) -> list[int]:
         for i, char in enumerate(charItem):
             if char == "1":
                 counter[i] += 1
-                print(counter)
 
     return counter
 
 
-def lifeSupportRating(rawData: list[str]) -> int:
-    o2Rate: int = 0
-    co2ScrubRate: int = 0
+def lifeSupportRating(rawData: list[str], flip: bool = False) -> int:
+    gasValue: int = 0
 
-    return o2Rate * co2ScrubRate
+    # List of sets for each bit
+    pivotData = list(zip(*rawData))
+
+    for e, val in enumerate(pivotData):
+        if len(rawData) <= 2:
+            print(flip)
+            print(rawData)
+            # if flip:
+            #    rawData = [i for i in rawData if i[-1] == '0']
+            # else:
+            #    rawData = [i for i in rawData if i[-1] == '1']
+
+            gasValue = int(rawData[0], 2)
+            break
+
+        if not flip:
+            # Oxygen
+            cb = max(val, key=val.count)
+        else:
+            # Carbon
+            cb = min(val, key=val.count)
+
+        rawData = [item for item in rawData if item[e] == cb]
+        pivotData = list(zip(*rawData))
+
+    return gasValue
 
 
 def getGammaEpsilonCount(rawData: list[str]) -> int:
@@ -57,12 +80,18 @@ def main(filename: str) -> int:
     totalRates = getGammaEpsilonCount(rawData)
     print(f"Part 1: {totalRates}")
 
+    oxygen = lifeSupportRating(rawData)
+    print(f"{oxygen=}")
+    carbon = lifeSupportRating(rawData, True)
+    print(f"{carbon=}")
+    print(f"Part 2: {oxygen*carbon}")
+
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day03.txt"))
-    # raise SystemExit(main("input_sri/day03.txt"))
+    # raise SystemExit(main("input_ff/day03.txt"))
+    raise SystemExit(main("input_sri/day03.txt"))
 
 
 # Tests
@@ -87,6 +116,15 @@ def test_getGammaEpsilonCount(input_data: list[str], expected: int) -> None:
     assert getGammaEpsilonCount(input_data) == expected
 
 
-@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 230),))
-def test_lifeSupportRating(input_data: list[str], expected: int) -> None:
+@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 23),))
+def test_lifeSupportRating_oxygen(input_data: list[str], expected: int) -> None:
     assert lifeSupportRating(input_data) == expected
+
+
+@pytest.mark.parametrize(
+    ("input_data", "bool_val", "expected"), ((test_data, True, 10),)
+)
+def test_lifeSupportRating_carbon(
+    input_data: list[str], bool_val: bool, expected: int
+) -> None:
+    assert lifeSupportRating(input_data, bool_val) == expected
