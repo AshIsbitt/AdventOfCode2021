@@ -23,30 +23,30 @@ def binaryCount(rawData: list[str]) -> list[int]:
 def lifeSupportRating(rawData: list[str], flip: bool = False) -> int:
     gasValue: int = 0
 
-    # List of sets for each bit
-    pivotData = list(zip(*rawData))
+    bitLength = len(rawData[0])
 
-    for e, val in enumerate(pivotData):
+    for index in range(bitLength):
+
+        # List of sets for each bit
+        pivotData = list(zip(*rawData))
+
         if len(rawData) <= 2:
-            print(flip)
-            print(rawData)
-            # if flip:
-            #    rawData = [i for i in rawData if i[-1] == '0']
-            # else:
-            #    rawData = [i for i in rawData if i[-1] == '1']
+            if flip:
+                rawData = [i for i in rawData if i[-1] == "0"]
+            else:
+                rawData = [i for i in rawData if i[-1] == "1"]
 
             gasValue = int(rawData[0], 2)
             break
 
         if not flip:
             # Oxygen
-            cb = max(val, key=val.count)
+            cb = max(pivotData[index], key=pivotData[index].count)
         else:
             # Carbon
-            cb = min(val, key=val.count)
+            cb = min(pivotData[index], key=pivotData[index].count)
 
-        rawData = [item for item in rawData if item[e] == cb]
-        pivotData = list(zip(*rawData))
+        rawData = [item for item in rawData if item[index] == cb]
 
     return gasValue
 
