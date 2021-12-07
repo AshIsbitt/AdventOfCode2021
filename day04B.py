@@ -1,4 +1,5 @@
-# What to do
+# To guarantee victory against the giant squid, figure out which board will win
+# first. What will your final score be if you choose that board?
 from dataclasses import dataclass
 
 import pytest
@@ -6,13 +7,19 @@ import pytest
 
 @dataclass
 class Board:
-    board: list[list[int]]
+    layout: list[str]
 
 
 def bingoSubsystem(rawData: str) -> int:
     finalScore = 0
 
     numbers, *boards = rawData.split("\n\n")
+
+    boardObjects = [Board(board.split()) for board in boards]
+    print(boardObjects)
+
+    for board in boardObjects:
+        pass
 
     return finalScore
 
