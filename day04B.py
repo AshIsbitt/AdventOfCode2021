@@ -1,6 +1,7 @@
 # To guarantee victory against the giant squid, figure out which board will win
 # first. What will your final score be if you choose that board?
 import pprint as p
+from collections import Counter
 from dataclasses import dataclass
 
 import pytest
@@ -8,21 +9,35 @@ import pytest
 
 @dataclass
 class Board:
-    layout: dict[int, bool]
+    layout: list[list[dict[int, bool]]]
 
     def __init__(self, boardlayout):
-        self.layout = dict()
+        self.layout = []
+        emptyList: list[tuple[int, bool]] = []
 
-        for val in boardlayout:
-            self.layout[int(val)] = True
+        for item in boardlayout:
+            emptyList.append({int(item): False})
 
-        # def score(self, finalNum: int) -> int:
-        #    score = 0
-        #    for enum, num in enumerate(layout):
-        #        if not self.remaining[enum]:
-        #            score += num
+            if len(emptyList) == 5:
+                self.layout.append(emptyList)
+                emptyList = []
 
-        # return score * finalNum
+    def score(self, finalNum: int) -> int:
+        score = 0
+
+        for enum, num in enumerate(layout):
+            if not self.remaining[enum]:
+                score += num
+
+        return score * finalNum
+
+    def hasWon(self) -> bool:
+        pass
+
+    def mark(self, num: int) -> None:
+        for e, x in enumerate(self.layout):
+            for en, y in enumerate(self.layout[e]):
+                self.layout[e][en][num] = True
 
 
 def bingoSubsystem(rawData: str) -> int:
@@ -32,19 +47,16 @@ def bingoSubsystem(rawData: str) -> int:
 
     numberList = [int(i) for i in numbers.split(",")]
     boardObjects = [Board(board.split()) for board in boards]
-    print(boardObjects)
+
+    winningBoard: Board = None
+    finalNum = 0
 
     for num in numberList:
         for board in boardObjects:
-            board.layout[num] = False
+            board.mark(num)
 
-        if sum(map((False).__eq__, board.layout.values())) < 5:
-            continue
-        else:
-            pass
-            # Check rows
-
-            # Check columns
+            if board.hasWon():
+                finalScore = board.score(num)
 
     return finalScore
 
