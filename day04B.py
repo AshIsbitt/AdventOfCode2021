@@ -1,5 +1,6 @@
 # To guarantee victory against the giant squid, figure out which board will win
 # first. What will your final score be if you choose that board?
+import pprint as p
 from dataclasses import dataclass
 
 import pytest
@@ -7,7 +8,21 @@ import pytest
 
 @dataclass
 class Board:
-    layout: list[str]
+    layout: dict[int, bool]
+
+    def __init__(self, boardlayout):
+        self.layout = dict()
+
+        for val in boardlayout:
+            self.layout[int(val)] = True
+
+        # def score(self, finalNum: int) -> int:
+        #    score = 0
+        #    for enum, num in enumerate(layout):
+        #        if not self.remaining[enum]:
+        #            score += num
+
+        # return score * finalNum
 
 
 def bingoSubsystem(rawData: str) -> int:
@@ -15,11 +30,21 @@ def bingoSubsystem(rawData: str) -> int:
 
     numbers, *boards = rawData.split("\n\n")
 
+    numberList = [int(i) for i in numbers.split(",")]
     boardObjects = [Board(board.split()) for board in boards]
     print(boardObjects)
 
-    for board in boardObjects:
-        pass
+    for num in numberList:
+        for board in boardObjects:
+            board.layout[num] = False
+
+        if sum(map((False).__eq__, board.layout.values())) < 5:
+            continue
+        else:
+            pass
+            # Check rows
+
+            # Check columns
 
     return finalScore
 
