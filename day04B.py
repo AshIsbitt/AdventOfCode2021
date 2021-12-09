@@ -25,14 +25,25 @@ class Board:
     def score(self, finalNum: int) -> int:
         score = 0
 
-        for enum, num in enumerate(layout):
-            if not self.remaining[enum]:
-                score += num
+        for x in self.layout:
+            for y in self.layout[x]:
+                if not self.layout[x][y][1]:
+                    score += self.layout[x][y][0]
 
         return score * finalNum
 
     def hasWon(self) -> bool:
         pass
+        # Check rows
+        for e, x in enumerate(self.layout):
+            for en, y in enumerate(self.layout[x]):
+                if not self.layout[e][en][1]:
+                    break
+            else:
+                return True
+
+            # Check columns
+            # for en, y in enumerate(self.layout[x]):
 
     def mark(self, num: int) -> None:
         for e, x in enumerate(self.layout):
@@ -48,12 +59,10 @@ def bingoSubsystem(rawData: str) -> int:
     numberList = [int(i) for i in numbers.split(",")]
     boardObjects = [Board(board.split()) for board in boards]
 
-    winningBoard: Board = None
-    finalNum = 0
-
     for num in numberList:
         for board in boardObjects:
             board.mark(num)
+            print(f"{num} Marked")
 
             if board.hasWon():
                 finalScore = board.score(num)
