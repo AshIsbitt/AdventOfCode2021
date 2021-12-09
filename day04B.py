@@ -36,14 +36,14 @@ class Board:
         pass
         # Check rows
         for e, x in enumerate(self.layout):
-            for en, y in enumerate(self.layout[x]):
-                if not self.layout[e][en][1]:
+            for en, y in enumerate(self.layout[e]):
+                if not all(i[1] for i in self.layout[e][en]):
                     break
             else:
                 return True
 
             # Check columns
-            # for en, y in enumerate(self.layout[x]):
+            # for en, y in enumerate(self.layout[e]):
 
     def mark(self, num: int) -> None:
         for e, x in enumerate(self.layout):
