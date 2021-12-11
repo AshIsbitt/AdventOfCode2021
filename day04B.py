@@ -1,5 +1,5 @@
-# To guarantee victory against the giant squid, figure out which board will win
-# first. What will your final score be if you choose that board?
+# Part 1: To guarantee victory against the giant squid, figure out which board
+# will win first. What will your final score be if you choose that board?
 import pprint as p
 from collections import Counter
 from dataclasses import dataclass
@@ -25,31 +25,29 @@ class Board:
     def score(self, finalNum: int) -> int:
         score = 0
 
-        for x in self.layout:
-            for y in self.layout[x]:
-                if not self.layout[x][y][1]:
-                    score += self.layout[x][y][0]
+        for row in self.layout:
+            for val in row:
+                if not next(iter(val.values())):
+                    score += next(iter(val.keys()))
 
         return score * finalNum
 
     def hasWon(self) -> bool:
-        pass
         # Check rows
         for x in range(5):
-            for y in range(5):
-                print(self.layout[x][y])
-                if not all([next(iter(d.values())) for d in self.layout[x][y]]):
-                    break
+            if not all([next(iter(d.values())) for d in self.layout[x]]):
+                break
             else:
                 return True
 
         # Check columns
         for x in range(5):
-            for y in range(5):
-                if not all([next(iter(d.values())) for d in self.layout[y][x]]):
-                    break
-                else:
-                    return True
+            if not all(all(self.layout[y][x].values()) for y in range(5)):
+                break
+            else:
+                return True
+
+        return False
 
     def mark(self, num: int) -> None:
         for row in self.layout:
@@ -71,6 +69,7 @@ def bingoSubsystem(rawData: str) -> int:
 
             if board.hasWon():
                 finalScore = board.score(num)
+                return finalScore
 
     return finalScore
 
