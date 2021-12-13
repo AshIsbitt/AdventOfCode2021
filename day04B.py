@@ -48,14 +48,18 @@ class Board:
                 value.update((num, True) for k, v in value.items() if k == num)
 
 
-def bingoSubsystem(rawData: str) -> int:
-    finalScore = 0
+def bingoParser(rawData: str) -> tuple[list[int], list[Board]]:
 
     numbers, *boards = rawData.split("\n\n")
-
     numberList = [int(i) for i in numbers.split(",")]
     boardObjects = [Board(board.split()) for board in boards]
-    print(numberList)
+
+    return numberList, boardObjects
+
+
+def bingoSubsystem(rawData: str) -> int:
+    finalScore = 0
+    numberList, boardObjects = bingoParser(rawData)
 
     for num in numberList:
         for board in boardObjects:
@@ -69,7 +73,10 @@ def bingoSubsystem(rawData: str) -> int:
 
 
 def finalWinner(rawData):
-    pass
+    finalScore = 0
+    numberList, boardObjects = bingoParser(rawData)
+
+    return finalScore
 
 
 def main(filename: str) -> int:
