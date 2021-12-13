@@ -10,6 +10,7 @@ import pytest
 @dataclass
 class Board:
     layout: list[list[dict[int, bool]]]
+    active: bool
 
     def __init__(self, boardlayout):
         self.layout = []
@@ -22,6 +23,8 @@ class Board:
                 self.layout.append(emptyList)
                 emptyList = []
 
+        self.active = True
+
     def score(self, finalNum: int) -> int:
         score = 0
 
@@ -32,7 +35,7 @@ class Board:
 
         return score * finalNum
 
-    def hasWon(self, num) -> bool:
+    def hasWon(self) -> bool:
         # Check rows
         for x in range(5):
             if all([next(iter(d.values())) for d in self.layout[x]]):
@@ -65,7 +68,7 @@ def bingoSubsystem(rawData: str) -> int:
         for board in boardObjects:
             board.mark(num)
 
-            if board.hasWon(num):
+            if board.hasWon():
                 finalScore = board.score(num)
                 return finalScore
 
@@ -74,7 +77,30 @@ def bingoSubsystem(rawData: str) -> int:
 
 def finalWinner(rawData):
     finalScore = 0
+    lastBoard = None
     numberList, boardObjects = bingoParser(rawData)
+
+    for num in numberList:
+        for board in boardObjects:
+            print(num)
+            p.pprint(board)
+            if not board.active:
+                continue
+            board.mark(num)
+            if board.hasWon():
+                board.active = False
+
+            if len([i for i in boardObjects if i.active]) == 1:
+                print("board")
+                lastBoard = [i for i in boardObjects if i.active][0]
+                lastNum = num
+                break
+
+        if lastBoard is not None:
+            break
+
+    p.pprint(lastBoard)
+    finalScore = lastBoard.score(lastNum)
 
     return finalScore
 
