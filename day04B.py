@@ -32,19 +32,22 @@ class Board:
 
         return score * finalNum
 
-    def hasWon(self) -> bool:
+    def hasWon(self, num) -> bool:
         # Check rows
         for x in range(5):
             if not all([next(iter(d.values())) for d in self.layout[x]]):
                 break
             else:
+                p.pprint(self.layout)
+                print(num)
                 return True
 
-        # Check columns
-        for x in range(5):
+            # Check columns
             if not all(all(self.layout[y][x].values()) for y in range(5)):
                 break
             else:
+                p.pprint(self.layout)
+                print(num)
                 return True
 
         return False
@@ -62,12 +65,13 @@ def bingoSubsystem(rawData: str) -> int:
 
     numberList = [int(i) for i in numbers.split(",")]
     boardObjects = [Board(board.split()) for board in boards]
+    print(numberList)
 
     for num in numberList:
         for board in boardObjects:
             board.mark(num)
 
-            if board.hasWon():
+            if board.hasWon(num):
                 finalScore = board.score(num)
                 return finalScore
 
