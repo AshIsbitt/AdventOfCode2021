@@ -35,19 +35,9 @@ class Board:
     def hasWon(self, num) -> bool:
         # Check rows
         for x in range(5):
-            if not all([next(iter(d.values())) for d in self.layout[x]]):
-                break
-            else:
-                p.pprint(self.layout)
-                print(num)
+            if all([next(iter(d.values())) for d in self.layout[x]]):
                 return True
-
-            # Check columns
-            if not all(all(self.layout[y][x].values()) for y in range(5)):
-                break
-            else:
-                p.pprint(self.layout)
-                print(num)
+            elif all(all(self.layout[y][x].values()) for y in range(5)):
                 return True
 
         return False
@@ -89,8 +79,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day04.txt"))
-    # raise SystemExit(main('input_sri/day04.txt'))
+    # raise SystemExit(main("input_ff/day04.txt"))
+    raise SystemExit(main("input_sri/day04.txt"))
 
 
 # Tests
