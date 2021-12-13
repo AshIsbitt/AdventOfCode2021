@@ -68,12 +68,19 @@ def bingoSubsystem(rawData: str) -> int:
     return finalScore
 
 
+def finalWinner(rawData):
+    pass
+
+
 def main(filename: str) -> int:
     with open(filename) as inputData:
         rawData = inputData.read()
 
     winningScore = bingoSubsystem(rawData)
     print(f"Part 1: {winningScore}")
+
+    lastWinningScore = finalWinner(rawData)
+    print(f"Part 2: {lastWinningScore}")
 
     return 0
 
@@ -113,6 +120,6 @@ def test_bingoSubsystem(input_data: str, expected: int) -> None:
 
 
 # Part 2 test
-# @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
-# def test_f(input_data: list[int], expected: int) -> None:
-#    assert f(input_data) == expected
+@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 1924),))
+def test_finalWinner(input_data: list[int], expected: int) -> None:
+    assert finalWinner(input_data) == expected
