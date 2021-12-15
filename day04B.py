@@ -75,34 +75,23 @@ def bingoSubsystem(rawData: str) -> int:
     return finalScore
 
 
-def finalWinner(rawData):
-    finalScore = 0
-    lastBoard = None
+def finalWinner(rawData: str) -> int:
     numberList, boardObjects = bingoParser(rawData)
 
     for num in numberList:
         for board in boardObjects:
-            print(num)
-            p.pprint(board)
             if not board.active:
                 continue
+
             board.mark(num)
+
             if board.hasWon():
                 board.active = False
 
-            if len([i for i in boardObjects if i.active]) == 1:
-                print("board")
-                lastBoard = [i for i in boardObjects if i.active][0]
-                lastNum = num
-                break
+            if not any([i.active for i in boardObjects]):
+                return board.score(num)
 
-        if lastBoard is not None:
-            break
-
-    p.pprint(lastBoard)
-    finalScore = lastBoard.score(lastNum)
-
-    return finalScore
+    return 0
 
 
 def main(filename: str) -> int:
@@ -119,8 +108,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day04.txt"))
-    raise SystemExit(main("input_sri/day04.txt"))
+    raise SystemExit(main("input_ff/day04.txt"))
+    # raise SystemExit(main("input_sri/day04.txt"))
 
 
 # Tests
@@ -154,5 +143,5 @@ def test_bingoSubsystem(input_data: str, expected: int) -> None:
 
 # Part 2 test
 @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 1924),))
-def test_finalWinner(input_data: list[int], expected: int) -> None:
+def test_finalWinner(input_data: str, expected: int) -> None:
     assert finalWinner(input_data) == expected
