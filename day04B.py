@@ -1,5 +1,7 @@
 # Part 1: To guarantee victory against the giant squid, figure out which board
 # will win first. What will your final score be if you choose that board?
+# Part 2: Figure out which board will win last. Once it wins, what would its
+# final score be?
 import pprint as p
 from collections import Counter
 from dataclasses import dataclass
