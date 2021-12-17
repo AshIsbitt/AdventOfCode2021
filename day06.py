@@ -17,6 +17,9 @@ def main(filename: str) -> int:
     fishes = fishBreeder(data, 80)
     print(f"Part 1: {fishes}")
 
+    fishes = fishBreeder(data, 256)
+    print(f"Part 2: {fishes}")
+
     return 0
 
 
