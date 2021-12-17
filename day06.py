@@ -4,7 +4,27 @@ import pytest
 
 
 def fishBreeder(rawData: list[int], day_length: int) -> int:
-    pass
+    currentGen = {
+        0: rawData.count(0),
+        1: rawData.count(1),
+        2: rawData.count(2),
+        3: rawData.count(3),
+        4: rawData.count(4),
+        5: rawData.count(5),
+        6: rawData.count(6),
+        7: rawData.count(7),
+        8: rawData.count(8),
+    }
+
+    for _ in range(day_length):
+        # Move each value dowk 1 in the list
+        pass
+        # 0 -> 6
+        # 8 += num of 0s
+
+    # Add up total number of fishes in current generation
+    fishCount = sum([i for i in currentGen.values()])
+    return fishCount
 
 
 def main(filename: str) -> int:
@@ -42,9 +62,3 @@ test_data = [3, 4, 3, 1, 2]
 )
 def test_fishBreeder(input_data: list[int], input_length: int, expected: int) -> None:
     assert fishBreeder(input_data, input_length) == expected
-
-
-# Part 2 test
-# @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
-# def test_f(input_data: list[int], expected: int) -> None:
-#    assert f(input_data) == expected
