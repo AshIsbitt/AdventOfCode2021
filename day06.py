@@ -13,12 +13,17 @@ def fishBreeder(rawData: list[int], day_length: int) -> int:
         5: rawData.count(5),
         6: rawData.count(6),
         7: rawData.count(7),
-        8: rawData.count(8),
+        8: rawData.count(8)
     }
 
     for _ in range(day_length):
-        # Move each value dowk 1 in the list
-        pass
+        # Move each value down 1 in the list
+        for k, v in currentGen.items():
+            if k == 0:
+                currentGen[6] += v
+                currentGen[8] += v
+            else:
+                currentGen[k-1] = v
         # 0 -> 6
         # 8 += num of 0s
 
