@@ -1,7 +1,5 @@
 # Part 1: Find a way to simulate lanternfish. How many lanternfish would there
 # be after 80 days?
-import pprint as p
-
 import pytest
 
 
@@ -23,16 +21,14 @@ def fishBreeder(rawData: list[int], day_length: int) -> int:
         # 0 -> 6
         # 8 += num of 0s
 
-        p.pprint(currentGen.values())
-
         zero = currentGen[0]
 
         for k, v in currentGen.items():
             if k != 0:
                 currentGen[k - 1] = v
-            else:
-                currentGen[6] += zero
-                currentGen[8] = zero
+
+        currentGen[6] += zero
+        currentGen[8] = zero
 
     return sum(currentGen.values())
 
@@ -42,7 +38,7 @@ def main(filename: str) -> int:
         rawData = inputData.read()
 
     # Convert to ints
-    data = list(map(int, rawData))
+    data = list(map(int, rawData.split(",")))
 
     fishes = fishBreeder(data, 80)
     print(f"Part 1: {fishes}")
@@ -54,8 +50,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day06.txt"))
-    # raise SystemExit(main('input_sri/day06.txt'))
+    # raise SystemExit(main("input_ff/day06.txt"))
+    raise SystemExit(main("input_sri/day06.txt"))
 
 
 # Tests
