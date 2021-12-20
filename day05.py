@@ -3,8 +3,33 @@
 import pytest
 
 
+class Coordinate:
+    x1: int
+    y1: int
+    x2: int
+    y2: int
+
+    def __init__(self, line: str):
+        chunks = line.split(" -> ")
+
+        chunk1 = chunks[0].split(",")
+        self.x1 = int(chunk1[0])
+        self.y1 = int(chunk1[1])
+
+        chunk2 = chunks[1].split(",")
+        self.x2 = int(chunk2[0])
+        self.y2 = int(chunk2[1])
+
+
 def ventMapping(rawData: list[str]) -> int:
-    pass
+    safe_routes = 0
+
+    coordinates = []
+
+    for line in rawData:
+        coordinates.append(Coordinate(line))
+
+    return safe_routes
 
 
 def main(filename: str) -> int:
