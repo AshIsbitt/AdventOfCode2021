@@ -1,5 +1,8 @@
 # Part 1: Consider only horizontal and vertical lines. At how many points do
 # at least two lines overlap?
+import pprint as p
+from collections import Counter
+
 import pytest
 
 
@@ -23,11 +26,24 @@ class Coordinate:
 
 def ventMapping(rawData: list[str]) -> int:
     safe_routes = 0
-
     coordinates = []
 
     for line in rawData:
         coordinates.append(Coordinate(line))
+
+    map_cords: Counter[tuple[int, int]] = Counter()
+
+    for point in coordinates:
+        print(point.x1, point.y1, point.x2, point.y2)
+        if point.x1 == point.x2:
+            for i in range(point.y1, point.y2 + 1):
+                map_cords[point.x1, i] += 1
+        if point.y1 == point.y2:
+            for j in range(point.x1, point.x2 + 1):
+                map_cords[j, point.y1] += 1
+
+    p.pprint(map_cords)
+    safe_routes = len([i for i in map_cords.values() if i >= 2])
 
     return safe_routes
 
