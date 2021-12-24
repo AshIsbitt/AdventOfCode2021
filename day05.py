@@ -1,5 +1,7 @@
 # Part 1: Consider only horizontal and vertical lines. At how many points do
 # at least two lines overlap?
+# Part 2: Unfortunately, considering only horizontal and vertical lines doesn't
+# give you the full picture; you need to also consider diagonal lines.
 import pprint as p
 from collections import Counter
 
@@ -34,7 +36,6 @@ def ventMapping(rawData: list[str], get_diagonals: bool = False) -> int:
     map_cords: Counter[tuple[int, int]] = Counter()
 
     for point in coordinates:
-        # print(point.x1, point.y1, point.x2, point.y2)
 
         if point.x1 == point.x2:
             for i in range(min(point.y1, point.y2), max(point.y1, point.y2) + 1):
@@ -42,6 +43,27 @@ def ventMapping(rawData: list[str], get_diagonals: bool = False) -> int:
         elif point.y1 == point.y2:
             for j in range(min(point.x1, point.x2), max(point.x1, point.x2) + 1):
                 map_cords[(j, point.y1)] += 1
+        # Part 2
+        elif get_diagonals:
+            # print(point.x1, point.y1, point.x2, point.y2)
+            if abs(point.x1 - point.x2) == abs(point.y1 - point.y2):
+                start_point = min((point.x1, point.y1), (point.x2, point.y2))
+                end_point = max((point.x1, point.y1), (point.x2, point.y2))
+
+                marker = list(start_point)
+                while tuple(marker) <= end_point:
+                    x, y = marker  # Destructuring marker so mypy doesn't cry
+                    map_cords[x, y] += 1
+
+                    if marker[0] <= end_point[0]:
+                        marker[0] += 1
+                    elif marker[0] >= end_point[0]:
+                        marker[0] -= 1
+
+                    if marker[1] <= end_point[1]:
+                        marker[1] += 1
+                    elif marker[1] >= end_point[1]:
+                        marker[1] -= 1
 
     safe_routes = len([i for i in map_cords.values() if i >= 2])
 
@@ -62,8 +84,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day05.txt"))
-    raise SystemExit(main("input_sri/day05.txt"))
+    raise SystemExit(main("input_ff/day05.txt"))
+    # raise SystemExit(main("input_sri/day05.txt"))
 
 
 # Tests
