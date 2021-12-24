@@ -24,7 +24,7 @@ class Coordinate:
         self.y2 = int(chunk2[1])
 
 
-def ventMapping(rawData: list[str]) -> int:
+def ventMapping(rawData: list[str], get_diagonals: bool = False) -> int:
     safe_routes = 0
     coordinates = []
 
@@ -34,15 +34,15 @@ def ventMapping(rawData: list[str]) -> int:
     map_cords: Counter[tuple[int, int]] = Counter()
 
     for point in coordinates:
-        print(point.x1, point.y1, point.x2, point.y2)
-        if point.x1 == point.x2:
-            for i in range(point.y1, point.y2 + 1):
-                map_cords[point.x1, i] += 1
-        if point.y1 == point.y2:
-            for j in range(point.x1, point.x2 + 1):
-                map_cords[j, point.y1] += 1
+        # print(point.x1, point.y1, point.x2, point.y2)
 
-    p.pprint(map_cords)
+        if point.x1 == point.x2:
+            for i in range(min(point.y1, point.y2), max(point.y1, point.y2) + 1):
+                map_cords[(point.x1, i)] += 1
+        elif point.y1 == point.y2:
+            for j in range(min(point.x1, point.x2), max(point.x1, point.x2) + 1):
+                map_cords[(j, point.y1)] += 1
+
     safe_routes = len([i for i in map_cords.values() if i >= 2])
 
     return safe_routes
@@ -55,12 +55,15 @@ def main(filename: str) -> int:
     countOfDangers = ventMapping(rawData)
     print(f"Part 1: {countOfDangers}")
 
+    dangers_on_diagonals = ventMapping(rawData, True)
+    print(f"Part 2: {dangers_on_diagonals}")
+
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day05.txt"))
-    # raise SystemExit(main('input_sri/day05.txt'))
+    # raise SystemExit(main("input_ff/day05.txt"))
+    raise SystemExit(main("input_sri/day05.txt"))
 
 
 # Tests
@@ -79,12 +82,12 @@ test_data = [
 
 
 # Part 1 test
-@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 5),))
-def test_ventMapping(input_data: list[str], expected: int) -> None:
-    assert ventMapping(input_data) == expected
-
-
-# Part 2 test
-# @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
-# def test_f(input_data: list[int], expected: int) -> None:
-#    assert f(input_data) == expected
+@pytest.mark.parametrize(
+    ("input_data", "boolean", "expected"),
+    (
+        (test_data, False, 5),
+        (test_data, True, 12),
+    ),
+)
+def test_ventMapping(input_data: list[str], boolean: bool, expected: int) -> None:
+    assert ventMapping(input_data, boolean) == expected
