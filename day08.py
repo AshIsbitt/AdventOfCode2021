@@ -2,13 +2,28 @@
 import pytest
 
 
+def parse_records(rawData: list[str]) -> list[list[str]]:
+    parsed_data = []
+
+    for record in rawData:
+        r = record.strip()
+        parsed_data.append(r.split(" | "))
+
+    return parsed_data
+
+
+def identify_unique_segments(rawData: list[str]) -> int:
+    unique_segments = 0
+    parsed_data = parse_records(rawData)
+
+    return unique_segments
+
+
 def main(filename: str) -> int:
     with open(filename) as inputData:
         rawData = inputData.readlines()
-    rawData = [line.rstrip("\n") for line in rawData]
 
-    # Convert to ints
-    # data = list(map(int, rawData))
+    print(f"Part 1: {identify_unique_segments(rawData)}")
 
     return 0
 
@@ -40,11 +55,11 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
         (test_data_2, 26),
     ),
 )
-def test_f(input_data: list[int], expected: int) -> None:
-    assert f(input_data) == expected
+def test_identify_unique_segments(input_data: list[str], expected: int) -> None:
+    assert identify_unique_segments(input_data) == expected
 
 
 # Part 2 test
 # @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
-# def test_f(input_data: list[int], expected: int) -> None:
+# def test_f(input_data: list[str], expected: int) -> None:
 #    assert f(input_data) == expected
