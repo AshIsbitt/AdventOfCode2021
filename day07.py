@@ -7,6 +7,12 @@ import pytest
 def crab_Alignment(data: list[int]) -> int:
     fuel_Count = 0
 
+    data.sort()
+    median = data[len(data) // 2]
+
+    for item in data:
+        fuel_Count += abs(item - median)
+
     return fuel_Count
 
 
@@ -26,8 +32,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day07.txt"))
-    # raise SystemExit(main('input_sri/day07.txt'))
+    # raise SystemExit(main("input_ff/day07.txt"))
+    raise SystemExit(main("input_sri/day07.txt"))
 
 
 # Tests
