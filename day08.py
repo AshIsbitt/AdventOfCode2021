@@ -29,8 +29,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day1.txt"))
-    # raise SystemExit(main('input_sri/day1.txt'))
+    raise SystemExit(main("input_ff/day08.txt"))
+    # raise SystemExit(main('input_sri/day08.txt'))
 
 
 # Tests
