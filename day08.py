@@ -2,9 +2,23 @@
 # Part 2: For each entry, determine all of the wire/segment connections and
 # decode the four-digit output values. What do you get if you add up all of the
 # output values?
+import itertools
 from collections import defaultdict
 
 import pytest
+
+MAPPING = {
+    0: [0, 1, 2, 4, 5, 6],
+    1: [2, 5],
+    2: [0, 2, 3, 4, 6],
+    3: [0, 2, 3, 5, 6],
+    4: [1, 2, 3, 5],
+    5: [0, 1, 3, 5, 6],
+    6: [0, 1, 2, 4, 5, 6],
+    7: [0, 2, 5],
+    8: [0, 1, 2, 3, 4, 5, 6],
+    9: [0, 1, 2, 3, 5, 6],
+}
 
 
 def parse_records(rawData: list[str]) -> list[list[str]]:
@@ -37,43 +51,16 @@ def identify_unique_segments(rawData: list[str]) -> int:
     return unique_segments
 
 
-def segment_calculator(line: list[str]) -> dict[int, str]:
-    words = line[0].split(" ")
+def validate_perm(perm: tuple[str, ...], line: str) -> bool:
+    words = line.split(" ")
 
-    word_strings = defaultdict(str)
+    for digit in range(10):
+        needed = {perm[idx] for idx in MAPPING[digit]}
 
-    for word in words:
-        word = "".join(sorted(word))
+        if not any(needed == set(word) for word in words):
+            return False
 
-        if len(word) == 3:
-            word_strings[7] = word
-        elif len(word) == 4:
-            word_strings[4] = word
-        elif len(word) == 2:
-            word_strings[1] = word
-        elif len(word) == 7:
-            word_strings[8] = word
-
-    # This only works when the other loop is complete
-    for word in words:
-        if len(word) == 5 and word_strings[7] in word:
-            word_strings[3] = word
-
-    for word in words:
-        if word_strings[4] in word and word_strings[3] in word:
-            word_strings[9] = word
-        if len(word) == 6 and word_strings[7] in word:
-            word_strings[0] = word
-        if len(word) == 6 and not word_strings[7] in word:
-            word_strings[6] = word
-
-    for word in words:
-        if word == word_strings[6]:
-            word_strings[5] = word
-        if word not in word_strings.values():
-            word_strings[2] = word
-
-    return word_strings
+    return True
 
 
 def calculate_output_vals(rawData: list[str]) -> int:
@@ -81,24 +68,33 @@ def calculate_output_vals(rawData: list[str]) -> int:
     total_output = 0
 
     for line in parsed_data:
-        segs = segment_calculator(line)
-        print(segs)
+        for perm in itertools.permutations("abcdefg"):
+            is_valid = validate_perm(perm, line[0])
+
+            if is_valid:
+                valid_order = perm
+
         num = "0"
 
-        # get output side
-        output = line[1]
-
-        # Calc nums from segs.values()
+        output = line[1].split(" ")
         for word in output:
-            word = "".join(sorted(word))
+            print(word)
+            idx = []
+            for letter in word:
+                print(perm.index(letter))
+                idx.append(perm.index(letter))
 
-            for k, v in segs.items():
-                if word in v:
+            idx.sort()
+            print(idx)
+
+            for k, v in MAPPING.items():
+                if v == idx:
+                    print("k found")
+                    print(k)
                     num += str(k)
 
+        print(num)
         total_output += int(num)
-        print(total_output)
-
     return total_output
 
 
