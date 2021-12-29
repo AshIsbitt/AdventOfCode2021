@@ -14,7 +14,7 @@ MAPPING = {
     3: [0, 2, 3, 5, 6],
     4: [1, 2, 3, 5],
     5: [0, 1, 3, 5, 6],
-    6: [0, 1, 2, 4, 5, 6],
+    6: [0, 1, 3, 4, 5, 6],
     7: [0, 2, 5],
     8: [0, 1, 2, 3, 4, 5, 6],
     9: [0, 1, 2, 3, 5, 6],
@@ -72,28 +72,23 @@ def calculate_output_vals(rawData: list[str]) -> int:
             is_valid = validate_perm(perm, line[0])
 
             if is_valid:
-                valid_order = perm
+                break
 
         num = "0"
 
         output = line[1].split(" ")
         for word in output:
-            print(word)
+            word = word.strip()
             idx = []
             for letter in word:
-                print(perm.index(letter))
                 idx.append(perm.index(letter))
 
             idx.sort()
-            print(idx)
 
             for k, v in MAPPING.items():
                 if v == idx:
-                    print("k found")
-                    print(k)
                     num += str(k)
 
-        print(num)
         total_output += int(num)
     return total_output
 
