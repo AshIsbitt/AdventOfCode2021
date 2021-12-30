@@ -1,23 +1,54 @@
 # Part 1: What is the sum of the risk levels of all low points on your
 # heightmap?
+import pprint as p
+
 import pytest
 
 
 def parse_input(rawData: list[str]) -> list[list[int]]:
-    rawData = [line.rstrip("\n") for line in rawData]
+    data = [int(i) for i in rawData if i != "\n"]
 
     data_map = []
 
-    for line in rawData:
-        row = [int(i) for i in line]
+    for item in data:
+        transformed_item = str(item)
+        row = [int(i) for i in transformed_item]
         data_map.append(row)
 
     return data_map
 
 
 def risk_mapping(rawData: list[str]) -> int:
-    data_map = parse_input(rawData)
-    return 0
+    risk_lvl = 0
+    data_map: list[list[int]] = parse_input(rawData)
+    print(len(data_map))
+
+    for idx, r in enumerate(data_map):
+        for idy, c in enumerate(r):
+            # print(idx, idy, c)
+
+            checks = []
+
+            try:
+                checks.append(c < data_map[idx][idy + 1])
+            except IndexError:
+                pass
+
+            try:
+                checks.append(c < data_map[idx + 1][idy])
+            except IndexError:
+                pass
+
+            if idx - 1 >= 0:
+                checks.append(c < data_map[idx - 1][idy])
+
+            if idy - 1 >= 0:
+                checks.append(c < data_map[idx][idy - 1])
+
+            if all(checks):
+                risk_lvl += 1 + c
+
+    return risk_lvl
 
 
 def main(filename: str) -> int:
@@ -29,16 +60,12 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day1.txt"))
-    # raise SystemExit(main('input_sri/day1.txt'))
+    # raise SystemExit(main("input_ff/day09.txt"))
+    raise SystemExit(main("input_sri/day09.txt"))
 
 
 # Tests
-test_data = """2199943210
-3987894921
-9856789892
-8767896789
-9899965678"""
+test_data = ["2199943210", "3987894921", "9856789892", "8767896789", "9899965678"]
 
 
 # Part 1 test
