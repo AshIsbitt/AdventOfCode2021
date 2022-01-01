@@ -3,7 +3,13 @@
 import pytest
 
 
-def illegal_char_scorer(rawData: list[str]) -> int:
+def char_points(char: str) -> int:
+    points = {")": 3, "]": 57, "}": 1197, ">": 25137}
+
+    return points[char]
+
+
+def locate_corrupted_chars(rawData: list[str]) -> int:
     total_score = 0
 
     return total_score
@@ -14,7 +20,7 @@ def main(filename: str) -> int:
         rawData = inputData.readlines()
     rawData = [line.rstrip("\n") for line in rawData]
 
-    print(f"Part 1: {illegal_char_scorer(rawData)}")
+    print(f"Part 1: {locate_corrupted_chars(rawData)}")
     return 0
 
 
@@ -40,8 +46,8 @@ test_data = [
 
 # Part 1 test
 @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 26397),))
-def test_illegal_char_scorer(input_data: list[str], expected: int) -> None:
-    assert illegal_char_scorer(input_data) == expected
+def test_locate_corrupted_chars(input_data: list[str], expected: int) -> None:
+    assert locate_corrupted_chars(input_data) == expected
 
 
 # Part 2 test
