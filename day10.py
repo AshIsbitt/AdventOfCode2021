@@ -4,7 +4,12 @@ import pytest
 
 
 def char_points(char: str) -> int:
-    points = {")": 3, "]": 57, "}": 1197, ">": 25137}
+    points = {
+        ")": 3,
+        "]": 57,
+        "}": 1197,
+        ">": 25137,
+    }
 
     return points[char]
 
@@ -45,12 +50,24 @@ test_data = [
 
 
 # Part 1 test
-@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 26397),))
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        (test_data, 26397),
+    ],
+)
 def test_locate_corrupted_chars(input_data: list[str], expected: int) -> None:
     assert locate_corrupted_chars(input_data) == expected
 
 
 # Part 2 test
-# @pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
-# def test_f(input_data: list[int], expected: int) -> None:
-#    assert f(input_data) == expected
+"""
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        (test_data, 0),
+    ]
+)
+ def test_f(input_data: list[int], expected: int) -> None:
+   assert f(input_data) == expected
+"""
