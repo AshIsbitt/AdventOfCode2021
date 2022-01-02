@@ -26,12 +26,24 @@ test_data = []
 
 
 # Part 1 test
-@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        (test_data, 0),
+    ]
+)
 def test_f(input_data: list[int], expected: int) -> None:
     assert f(input_data) == expected
 
 
 # Part 2 test
-#@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 0),))
-#def test_f(input_data: list[int], expected: int) -> None:
-#    assert f(input_data) == expected
+"""
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        (test_data, 0),
+    ]
+)
+def test_f(input_data: list[int], expected: int) -> None:
+    assert f(input_data) == expected
+"""
