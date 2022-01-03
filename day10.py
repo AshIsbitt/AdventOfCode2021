@@ -1,11 +1,13 @@
 # Part 1: Find the first illegal character in each corrupted line of the
 # navigation subsystem. What is the total syntax error score for those errors?
+# Part 2: Find the completion string for each incomplete line, score the
+# completion strings, and sort the scores. What is the middle score?
 from collections import Counter
 
 import pytest
 
 
-def char_points(char: str) -> int:
+def corrupted_points(char: str) -> int:
     points = {
         ")": 3,
         "]": 57,
@@ -32,7 +34,7 @@ def locate_corrupted_lines(rawData: list[str]) -> int:
                 if buffer[-1] == token_key:
                     buffer.pop(-1)
                 else:
-                    total_score += char_points(token)
+                    total_score += corrupted_points(token)
                     break
 
         if len(buffer):
