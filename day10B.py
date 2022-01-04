@@ -28,8 +28,9 @@ def locate_mismatch(line: str) -> str | None:
             buffer.append(token)
         elif token in PAIRS.values():
             deleted = buffer.pop()  # delete the last item in the list
+            open_pair, *_ = [k for k, v in PAIRS.items() if v == token]
 
-            if deleted != [k for k, v in PAIRS.items() if v == token][0]:
+            if deleted != open_pair:
                 return token
 
     return None
