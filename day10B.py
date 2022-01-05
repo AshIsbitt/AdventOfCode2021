@@ -19,6 +19,13 @@ CORRUPTED_SCORES = {
     ">": 25137,
 }
 
+AUTOCOMPLETE_SCORES = {
+    ")": 1,
+    "]": 2,
+    "}": 3,
+    ">": 4,
+}
+
 
 def locate_mismatch(line: str) -> str | None:
     buffer: list[str] = []
