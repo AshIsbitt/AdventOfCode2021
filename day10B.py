@@ -55,13 +55,39 @@ def calculate_corruption(rawData: list[str]) -> int:
     return sum(scores)
 
 
+def remove_corrupted(rawData: list[str]) -> list[str]:
+    pass
+
+
+def get_missing_chars(line: str) -> str:
+    pass
+
+
+def get_scores(closing_chars: str) -> int:
+    pass
+
+
+def calculate_incomplete(rawData: list[str]) -> int:
+    incompletes = remove_corrupted(rawData)
+    scores = []
+
+    for line in incompletes:
+        missing_chars = get_missing_chars(line)
+        scores.append(get_scores(missing_chars))
+
+    ordered_scores = sorted(scores)
+    middle_score = ordered_scores[len(ordered_scores) // 2]
+
+    return middle_score
+
+
 def main(filename: str) -> int:
     with open(filename) as inputData:
         rawData = inputData.readlines()
     rawData = [line.rstrip("\n") for line in rawData]
 
     print(f"Part 1: {calculate_corruption(rawData)}")
-    # print(f"Part 2: {}")
+    print(f"Part 2: {calculate_incomplete(rawData)}")
 
     return 0
 
