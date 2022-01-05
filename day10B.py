@@ -111,8 +111,17 @@ test_data = [
     "<{([{{}}[<[[[<>{}]]]>[]]",
 ]
 
+incomplete_lines = [
+    "[({(<(())[]>[[{[]{<()<>>",
+    "[(()[<>])]({[<{<<[]>>(",
+    "(((({<>}<{<{<>}{[]{[]{}",
+    "{<[[]]>}<{[{[{[]{()[[[]",
+    "<{([{{}}[<[[[<>{}]]]>[]]",
+]
 
 # Part 1 test
+
+
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
@@ -124,13 +133,49 @@ def test_calculate_corruption(input_data: list[str], expected: int) -> None:
 
 
 # Part 2 test
-"""
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
-        (test_data, 0),
-    ]
+        (test_data, 288957),
+    ],
 )
-def test_f(input_data: list[int], expected: int) -> None:
-    assert f(input_data) == expected
-"""
+def test_calculate_incomplete(input_data: list[str], expected: int) -> None:
+    assert calculate_incomplete(input_data) == expected
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        (test_data, incomplete_lines),
+    ],
+)
+def test_remove_corrupted(input_data: list[str], expected: list[str]) -> None:
+    assert remove_corrupted(input_data) == expected
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        ("[({(<(())[]>[[{[]{<()<>>", "}}]])})]"),
+        ("[(()[<>])]({[<{<<[]>>(", ")}>]})"),
+        ("(((({<>}<{<{<>}{[]{[]{}", "}}>}>))))"),
+        ("{<[[]]>}<{[{[{[]{()[[[]", "]]}}]}]}>"),
+        ("<{([{{}}[<[[[<>{}]]]>[]]", "])}>"),
+    ],
+)
+def test_get_missing_chars(input_data: str, expected: str) -> None:
+    assert get_missing_chars(input_data) == expected
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        ("}}]])})]", 288957),
+        (")}>]})", 5566),
+        ("}}>}>))))", 1480781),
+        ("]]}}]}]}>", 995444),
+        ("])}>", 294),
+    ],
+)
+def test_get_scores(input_data: str, expected: int) -> None:
+    assert get_scores(input_data) == expected
