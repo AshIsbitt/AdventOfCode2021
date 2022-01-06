@@ -83,7 +83,13 @@ def get_missing_chars(line: str) -> str:
 
 
 def get_scores(closing_chars: str) -> int:
-    pass
+    total_score = 0
+
+    for i in closing_chars:
+        total_score *= 5
+        total_score += AUTOCOMPLETE_SCORES[i]
+
+    return total_score
 
 
 def calculate_incomplete(rawData: list[str]) -> int:
@@ -112,8 +118,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day10.txt"))
-    raise SystemExit(main("input_sri/day10.txt"))
+    raise SystemExit(main("input_ff/day10.txt"))
+    # raise SystemExit(main("input_sri/day10.txt"))
 
 
 # Tests
