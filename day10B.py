@@ -2,6 +2,7 @@
 # navigation subsystem. What is the total syntax error score for those errors?
 # Part 2: Find the completion string for each incomplete line, score the
 # completion strings, and sort the scores. What is the middle score?
+# Refactor and part 2 based off: https://pastebin.com/BbQ6Cinz
 import pytest
 
 
@@ -56,7 +57,15 @@ def calculate_corruption(rawData: list[str]) -> int:
 
 
 def remove_corrupted(rawData: list[str]) -> list[str]:
-    pass
+    incomplete = []
+
+    for line in rawData:
+        if locate_mismatch(line):
+            continue
+        else:
+            incomplete.append(line)
+
+    return incomplete
 
 
 def get_missing_chars(line: str) -> str:
