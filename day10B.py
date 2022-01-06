@@ -69,7 +69,17 @@ def remove_corrupted(rawData: list[str]) -> list[str]:
 
 
 def get_missing_chars(line: str) -> str:
-    pass
+    stack: list[str] = []
+    missing: list[str] = []
+
+    for char in line:
+        if char in PAIRS.keys():
+            stack.append(char)
+        else:
+            stack.pop()
+
+    missing = [PAIRS[i] for i in stack[::-1]]
+    return "".join(missing)
 
 
 def get_scores(closing_chars: str) -> int:
