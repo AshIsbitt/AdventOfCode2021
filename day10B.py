@@ -3,6 +3,7 @@
 # Part 2: Find the completion string for each incomplete line, score the
 # completion strings, and sort the scores. What is the middle score?
 # Refactor and part 2 based off: https://pastebin.com/BbQ6Cinz
+import pyperclip as pyp  # type: ignore
 import pytest
 
 
@@ -111,13 +112,23 @@ def main(filename: str) -> int:
         rawData = inputData.readlines()
     rawData = [line.rstrip("\n") for line in rawData]
 
-    if 'sri' in filename:
-        print('Browser: Safari')
-    elif 'ff' in filename:
-        print('Browser: Firefox')
+    if "sri" in filename:
+        print("Browser: Safari")
+    elif "ff" in filename:
+        print("Browser: Firefox")
 
-    print(f"Part 1: {calculate_corruption(rawData)}")
-    print(f"Part 2: {calculate_incomplete(rawData)}")
+    p1 = calculate_corruption(rawData)
+    print(f"Part 1: {p1}")
+
+    p2 = calculate_incomplete(rawData)
+    print(f"Part 2: {p2}")
+
+    try:
+        pyp.copy(p2)
+        print("Copied: Part 2")
+    except NameError:
+        pyp.copy(p1)
+        print("Copied: Part 1")
 
     return 0
 

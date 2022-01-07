@@ -1,6 +1,6 @@
 # What to do
 import pytest
-import pyinputplus as pyin
+import pyperclip as pyp # type: ignore
 
 
 def main(filename: str) -> int:
@@ -16,8 +16,17 @@ def main(filename: str) -> int:
     elif 'ff' in filename:
         print('Browser: Firefox')
 
-    print(f"Part 1: {}")
-    #print(f"Part 2: {}")
+    p1 = pass
+    print(f"Part 1: {p1}")
+    #p2 = pass
+    #print(f"Part 2: {p2}")
+
+    try:
+        pyp.copy(p2)
+        print('Copied: Part 2')
+    except NameError:
+        pyp.copy(p1)
+        print('Copied: Part 1')
 
     return 0
 
