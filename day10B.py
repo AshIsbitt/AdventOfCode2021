@@ -111,6 +111,11 @@ def main(filename: str) -> int:
         rawData = inputData.readlines()
     rawData = [line.rstrip("\n") for line in rawData]
 
+    if 'sri' in filename:
+        print('Browser: Safari')
+    elif 'ff' in filename:
+        print('Browser: Firefox')
+
     print(f"Part 1: {calculate_corruption(rawData)}")
     print(f"Part 2: {calculate_incomplete(rawData)}")
 

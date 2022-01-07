@@ -1,5 +1,6 @@
 # What to do
 import pytest
+import pyinputplus as pyin
 
 
 def main(filename: str) -> int:
@@ -9,6 +10,11 @@ def main(filename: str) -> int:
 
     # Convert to ints
     # data = list(map(int, rawData))
+
+    if 'sri' in filename:
+        print('Browser: Safari')
+    elif 'ff' in filename:
+        print('Browser: Firefox')
 
     print(f"Part 1: {}")
     #print(f"Part 2: {}")
