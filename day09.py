@@ -4,8 +4,25 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
+def parse_data(rawData: list[str]) -> list[list[int]]:
+    data_map: list[list[int]] = []
+
+    for item in rawData:
+        row = [int(i) for i in item if i != "\n"]
+        data_map.append(row)
+
+    return data_map
+
+
 def calculate_risk_level(rawData: list[str]) -> int:
     total_risk_lvl = 0
+
+    data_map: list[list[int]] = parse_data(rawData)
+    print(data_map)
+
+    # Create a defautdict with default value 9
+    # loop through each inner loop within the larger loop
+    # for each number, take it's x and y values and append them to the defaultdict
 
     return total_risk_lvl
 
@@ -23,7 +40,7 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = pass
+    # p2 = 0
     # pyp.copy(p2)
     # print(f"Part 2: {p2}")
 
