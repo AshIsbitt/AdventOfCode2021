@@ -1,5 +1,7 @@
 # Part 1: Find all of the low points on your heightmap. What is the sum of the
 # risk levels of all low points on your heightmap?
+from collections import defaultdict
+
 import pyperclip as pyp  # type: ignore
 import pytest
 
@@ -16,13 +18,25 @@ def parse_data(rawData: list[str]) -> list[list[int]]:
 
 def calculate_risk_level(rawData: list[str]) -> int:
     total_risk_lvl = 0
-
     data_map: list[list[int]] = parse_data(rawData)
-    print(data_map)
 
-    # Create a defautdict with default value 9
-    # loop through each inner loop within the larger loop
-    # for each number, take it's x and y values and append them to the defaultdict
+    world_map = defaultdict(lambda: 9)
+
+    for row, line in enumerate(data_map):
+        for col, val in enumerate(line):
+            world_map[(row, col)] = val
+
+    # Turn it into a tuple to avoid a runtimeError
+    for (x, y), n in tuple(world_map.items()):
+        checks: list[bool] = []
+
+        checks.append(True if world_map[(x + 1, y)] > n else False)
+        checks.append(True if world_map[(x - 1, y)] > n else False)
+        checks.append(True if world_map[(x, y + 1)] > n else False)
+        checks.append(True if world_map[(x, y - 1)] > n else False)
+
+        if all(checks):
+            total_risk_lvl += 1 + n
 
     return total_risk_lvl
 
