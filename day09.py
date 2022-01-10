@@ -67,9 +67,16 @@ def find_basins(world_map: dict[tuple[int, int], int]) -> list[int]:
         if (x, y) not in traversed:
             traversed.add((x, y))
 
-            # Do something here to check directions?
+            if world_map[(x + 1, y)] != 9:
+                traversed.add((x + 1, y))
+            elif world_map[(x - 1, y)] != 9:
+                traversed.add((x - 1, y))
+            elif world_map[(x, y + 1)] != 9:
+                traversed.add((x, y + 1))
+            elif world_map[(x, y - 1)] != 9:
+                traversed.add((x, y - 1))
 
-        print(traversed)
+        basins.append(len(traversed))
 
     print(basins)
     return basins
