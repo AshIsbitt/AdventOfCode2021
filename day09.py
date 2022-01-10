@@ -1,5 +1,7 @@
 # Part 1: Find all of the low points on your heightmap. What is the sum of the
 # risk levels of all low points on your heightmap?
+# Part 2: What do you get if you multiply together the sizes of the three
+# largest basins?
 from collections import defaultdict
 
 import pyperclip as pyp  # type: ignore
@@ -41,6 +43,12 @@ def calculate_risk_level(rawData: list[str]) -> int:
     return total_risk_lvl
 
 
+def map_basins(rawData: list[str]) -> int:
+    total_value = 0
+
+    return total_value
+
+
 def main(filename: str) -> int:
     with open(filename) as inputData:
         rawData = inputData.readlines()
@@ -54,9 +62,9 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = map_basins(rawData)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
@@ -82,13 +90,11 @@ def test_calculate_risk_level(input_data: list[str], expected: int) -> None:
 
 
 # Part 2 test
-"""
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
-        (test_data, 0),
-    ]
+        (test_data, 1134),
+    ],
 )
-def test_f(input_data: list[int], expected: int) -> None:
-    assert f(input_data) == expected
-"""
+def test_map_basins(input_data: list[str], expected: int) -> None:
+    assert map_basins(input_data) == expected
