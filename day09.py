@@ -61,24 +61,25 @@ def find_basins(world_map: dict[tuple[int, int], int]) -> list[int]:
     traversed = set()
 
     for (x, y), n in tuple(world_map.items()):
-        if n == 9:
-            continue
+        item = world_map[(x, y)]
+        if item:
+            if n == 9:
+                continue
 
-        if (x, y) not in traversed:
-            traversed.add((x, y))
+            if (x, y) not in traversed:
+                traversed.add((x, y))
 
-            if world_map[(x + 1, y)] != 9:
-                traversed.add((x + 1, y))
-            elif world_map[(x - 1, y)] != 9:
-                traversed.add((x - 1, y))
-            elif world_map[(x, y + 1)] != 9:
-                traversed.add((x, y + 1))
-            elif world_map[(x, y - 1)] != 9:
-                traversed.add((x, y - 1))
+                if world_map[(x + 1, y)] != 9:
+                    traversed.add((x + 1, y))
+                elif world_map[(x - 1, y)] != 9:
+                    traversed.add((x - 1, y))
+                elif world_map[(x, y + 1)] != 9:
+                    traversed.add((x, y + 1))
+                elif world_map[(x, y - 1)] != 9:
+                    traversed.add((x, y - 1))
 
-        basins.append(len(traversed))
+    basins.append(len(traversed))
 
-    print(basins)
     return basins
 
 
