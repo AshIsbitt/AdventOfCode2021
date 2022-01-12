@@ -42,53 +42,58 @@ def direction_checks(
     return all(checks)
 
 
-def calculate_risk_level(rawData: list[str]) -> int:
+def calculate_risk_level(rawData: list[str]) -> tuple[int, list[tuple[int, int]]]:
+
     total_risk_lvl = 0
+    minimas: list[tuple[int, int]] = []
     data_map: list[list[int]] = parse_data(rawData)
     world_map = build_dict(data_map)
 
     # Turn it into a tuple to avoid a runtimeError
     for (x, y), n in tuple(world_map.items()):
         if direction_checks(world_map, (x, y), n):
+            minimas.append((x, y))
             total_risk_lvl += 1 + n
 
-    return total_risk_lvl
+    return (total_risk_lvl, minimas)
 
 
-def find_basins(world_map: dict[tuple[int, int], int]) -> list[int]:
+def find_basins(
+    world_map: dict[tuple[int, int], int], minimas: list[tuple[int, int]]
+) -> list[int]:
     basins: list[int] = []
 
     traversed = set()
 
-    for (x, y), n in tuple(world_map.items()):
-        item = world_map[(x, y)]
-        if item:
-            if n == 9:
-                continue
+    for (x, y) in minimas:
+        items: list[tuple[int, int]] = [(x, y)]
 
-            if (x, y) not in traversed:
+        while items:
+            x, y = items.pop()
+
+            if (x, y) not in traversed and world_map[x, y] != 9:
                 traversed.add((x, y))
 
                 if world_map[(x + 1, y)] != 9:
-                    traversed.add((x + 1, y))
+                    items.append((x + 1, y))
                 elif world_map[(x - 1, y)] != 9:
-                    traversed.add((x - 1, y))
+                    items.append((x - 1, y))
                 elif world_map[(x, y + 1)] != 9:
-                    traversed.add((x, y + 1))
+                    items.append((x, y + 1))
                 elif world_map[(x, y - 1)] != 9:
-                    traversed.add((x, y - 1))
+                    items.append((x, y - 1))
 
-    basins.append(len(traversed))
+        basins.append(len(traversed))
 
     return basins
 
 
-def avoidance_zones(rawData: list[str]) -> int:
+def avoidance_zones(rawData: list[str], minimas: list[tuple[int, int]]) -> int:
     total_value = 0
     data_map: list[list[int]] = parse_data(rawData)
     world_map: dict[tuple[int, int], int] = build_dict(data_map)
 
-    list_of_basins = find_basins(world_map)
+    list_of_basins = find_basins(world_map, minimas)
     list_of_basins.sort(reverse=True)
     print(list_of_basins)
 
@@ -108,9 +113,9 @@ def main(filename: str) -> int:
 
     p1 = calculate_risk_level(rawData)
     pyp.copy(p1)
-    print(f"Part 1: {p1}")
+    print(f"Part 1: {p1[0]}")
 
-    p2 = avoidance_zones(rawData)
+    p2 = avoidance_zones(rawData, p1[1])
     pyp.copy(p2)
     print(f"Part 2: {p2}")
 
@@ -123,7 +128,20 @@ if __name__ == "__main__":
 
 
 # Tests
-test_data = ["2199943210", "3987894921", "9856789892", "8767896789", "9899965678"]
+test_data = [
+    "2199943210",
+    "3987894921",
+    "9856789892",
+    "8767896789",
+    "9899965678",
+]
+
+test_minimas = [
+    (0, 1),
+    (0, 9),
+    (2, 2),
+    (4, 6),
+]
 
 
 # Part 1 test
@@ -134,15 +152,17 @@ test_data = ["2199943210", "3987894921", "9856789892", "8767896789", "9899965678
     ],
 )
 def test_calculate_risk_level(input_data: list[str], expected: int) -> None:
-    assert calculate_risk_level(input_data) == expected
+    assert calculate_risk_level(input_data)[0] == expected
 
 
 # Part 2 test
 @pytest.mark.parametrize(
-    ("input_data", "expected"),
+    ("input_data", "minimas", "expected"),
     [
-        (test_data, 1134),
+        (test_data, test_minimas, 1134),
     ],
 )
-def test_avoidance_zones(input_data: list[str], expected: int) -> None:
-    assert avoidance_zones(input_data) == expected
+def test_avoidance_zones(
+    input_data: list[str], minimas: list[tuple[int, int]], expected: int
+) -> None:
+    assert avoidance_zones(input_data, minimas) == expected
