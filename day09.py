@@ -63,25 +63,22 @@ def find_basins(
 ) -> list[int]:
     basins: list[int] = []
 
-    traversed = set()
-
     for (x, y) in minimas:
+        traversed = set()
         items: list[tuple[int, int]] = [(x, y)]
 
         while items:
             x, y = items.pop()
+            traversed.add((x, y))
 
-            if (x, y) not in traversed and world_map[x, y] != 9:
-                traversed.add((x, y))
-
-                if world_map[(x + 1, y)] != 9:
-                    items.append((x + 1, y))
-                elif world_map[(x - 1, y)] != 9:
-                    items.append((x - 1, y))
-                elif world_map[(x, y + 1)] != 9:
-                    items.append((x, y + 1))
-                elif world_map[(x, y - 1)] != 9:
-                    items.append((x, y - 1))
+            if world_map[(x + 1, y)] != 9 and (x + 1, y) not in traversed:
+                items.append((x + 1, y))
+            if world_map[(x - 1, y)] != 9 and (x - 1, y) not in traversed:
+                items.append((x - 1, y))
+            if world_map[(x, y + 1)] != 9 and (x, y + 1) not in traversed:
+                items.append((x, y + 1))
+            if world_map[(x, y - 1)] != 9 and (x, y - 1) not in traversed:
+                items.append((x, y - 1))
 
         basins.append(len(traversed))
 
@@ -112,7 +109,7 @@ def main(filename: str) -> int:
         print("Browser: Firefox")
 
     p1 = calculate_risk_level(rawData)
-    pyp.copy(p1)
+    pyp.copy(p1[0])
     print(f"Part 1: {p1[0]}")
 
     p2 = avoidance_zones(rawData, p1[1])
@@ -123,8 +120,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day09.txt"))
-    raise SystemExit(main("input_sri/day09.txt"))
+    raise SystemExit(main("input_ff/day09.txt"))
+    # raise SystemExit(main("input_sri/day09.txt"))
 
 
 # Tests
