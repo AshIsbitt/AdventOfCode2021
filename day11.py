@@ -5,21 +5,27 @@ import pytest
 
 
 def parse_input(rawData: str) -> list[list[int]]:
-    pass
+    lines = rawData.splitlines()
+    data = []
+
+    for line in lines:
+        buf = [int(i) for i in line if i != "\n"]
+        data.append(buf)
+
+    return data
 
 
 def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
-    data = parse_input(rawData)
-    print(data)
-
+    data: list[list[int]] = parse_input(rawData)
     flashes: int = 0
+    print(data)
 
     return flashes
 
 
 def main(filename: str) -> int:
     with open(filename) as inputData:
-        rawData = inputData.read()
+        rawData: str = inputData.read()
 
     if "sri" in filename:
         print("Browser: Safari")
@@ -71,7 +77,7 @@ test_data_2: str = """5483143223
     ],
 )
 def test_calculate_flashing_octopi(
-    input_data: list[int], iterations: int, expected: int
+    input_data: str, iterations: int, expected: int
 ) -> None:
     assert calculate_flashing_octopi(input_data, iterations) == expected
 
