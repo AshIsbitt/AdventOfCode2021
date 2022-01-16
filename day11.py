@@ -21,15 +21,15 @@ def check_flash(val: int) -> bool:
     return True if val == 9 else False
 
 
-def adjacent(x: int, y: int) -> Generator[tuple[list[int], list[int]], None, None]:
-    yield ([x - 1], [y - 1])
-    yield ([x - 1], [y])
-    yield ([x - 1], [y + 1])
-    yield ([x], [y - 1])
-    yield ([x], [y + 1])
-    yield ([x + 1], [y - 1])
-    yield ([x + 1], [y])
-    yield ([x + 1], [y + 1])
+def adjacent(x: int, y: int) -> Generator[tuple[int, int], None, None]:
+    yield (x - 1, y - 1)
+    yield (x - 1, y)
+    yield (x - 1, y + 1)
+    yield (x, y - 1)
+    yield (x, y + 1)
+    yield (x + 1, y - 1)
+    yield (x + 1, y)
+    yield (x + 1, y + 1)
 
 
 def increment_values(
@@ -38,29 +38,16 @@ def increment_values(
     data[x][y] += 1
     flashes += 1
 
-    for pt in next(adjacent(x, y)):
-        x, y = pt
+    for pt in adjacent(x, y):
+        r, c = pt
 
-        if check_flash(data[x][y]):
-            data, flashes = increment_values(data, x, y, flashes)
+        if check_flash(data[r][c]):
+            data, flashes = increment_values(data, r, c, flashes)
 
     return data, flashes
 
 
 def flashing_octopi(data: list[list[int]], iterations: int, flashes: int):
-    # Recursive function
-    # loop through each line
-    # increment each number
-    # if num is 9, increment flash counter
-    # increment x+1, x-1, y+1, y-1 if not out of bounds
-    # Do this using IF statements to check if they exist
-    # Also increment diagonals using the same method
-
-    # iterations -= 1
-
-    # if iterations != 0, call flashing_octopi
-    # else, return count of flashes
-
     flashes = 0
 
     for col, line in enumerate(data):
@@ -78,12 +65,9 @@ def flashing_octopi(data: list[list[int]], iterations: int, flashes: int):
     else:
         flashing_octopi(data, iterations, flashes)
 
-    return 0
-
 
 def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
     data: list[list[int]] = parse_input(rawData)
-    print(data)
 
     return flashing_octopi(data, iterations, 0)
 
