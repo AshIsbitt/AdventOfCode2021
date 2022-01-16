@@ -1,5 +1,7 @@
 # Part 1: Given the starting energy levels of the dumbo octopuses in your
 # cavern, simulate 100 steps. How many total flashes are there after 100 steps?
+from typing import Generator
+
 import pyperclip as pyp  # type: ignore
 import pytest
 
@@ -19,9 +21,9 @@ def check_flash(val: int) -> bool:
     return True if val == 9 else False
 
 
-def adjacent(x: int, y: int) -> tuple[list[int], list[int]]:
+def adjacent(x: int, y: int) -> Generator[tuple[list[int], list[int]], None, None]:
     yield ([x - 1], [y - 1])
-    yield ([x - 1][y])
+    yield ([x - 1], [y])
     yield ([x - 1], [y + 1])
     yield ([x], [y - 1])
     yield ([x], [y + 1])
@@ -32,12 +34,12 @@ def adjacent(x: int, y: int) -> tuple[list[int], list[int]]:
 
 def increment_values(
     data: list[list[int]], x: int, y: int, flashes: int
-) -> list[list[int]]:
+) -> tuple[list[list[int]], int]:
     data[x][y] += 1
     flashes += 1
 
     for pt in next(adjacent(x, y)):
-        x, y = pt.pop()
+        x, y = pt
 
         if check_flash(data[x][y]):
             data, flashes = increment_values(data, x, y, flashes)
