@@ -7,18 +7,17 @@ import pytest
 
 
 def parse_input(rawData: str) -> list[list[int]]:
-    lines = rawData.splitlines()
-    data = []
+    data = {}
 
-    for line in lines:
-        buf = [int(i) for i in line if i != "\n"]
-        data.append(buf)
+    for x, line in enumerate(rawData.splitlines()):
+        for y, val in enumerate(line):
+            data[(x, y)] = int(val)
 
     return data
 
 
 def check_flash(val: int) -> bool:
-    return True if val == 9 else False
+    return True if val >= 9 else False
 
 
 def adjacent(x: int, y: int) -> Generator[tuple[int, int], None, None]:
@@ -33,9 +32,9 @@ def adjacent(x: int, y: int) -> Generator[tuple[int, int], None, None]:
 
 
 def increment_values(
-    data: list[list[int]], x: int, y: int, flashes: int
+    data: dict[tuple[int, int], int], x: int, y: int, flashes: int
 ) -> tuple[list[list[int]], int]:
-    data[x][y] += 1
+    data[x][y] == 0
     flashes += 1
 
     for pt in adjacent(x, y):
@@ -47,7 +46,7 @@ def increment_values(
     return data, flashes
 
 
-def flashing_octopi(data: list[list[int]], iterations: int, flashes: int):
+def flashing_octopi(data: dict[tuple[int, int], int], iterations: int, flashes: int):
     flashes = 0
 
     for col, line in enumerate(data):
@@ -67,7 +66,7 @@ def flashing_octopi(data: list[list[int]], iterations: int, flashes: int):
 
 
 def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
-    data: list[list[int]] = parse_input(rawData)
+    data: dict[tuple[int, int], int] = parse_input(rawData)
 
     return flashing_octopi(data, iterations, 0)
 
