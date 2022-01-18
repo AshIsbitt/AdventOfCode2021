@@ -1,12 +1,13 @@
 # Part 1: Given the starting energy levels of the dumbo octopuses in your
 # cavern, simulate 100 steps. How many total flashes are there after 100 steps?
+import pprint as p
 from typing import Generator
 
 import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def parse_input(rawData: str) -> list[list[int]]:
+def parse_input(rawData: str) -> dict[tuple[int, int], int]:
     data = {}
 
     for x, line in enumerate(rawData.splitlines()):
@@ -32,37 +33,46 @@ def adjacent(x: int, y: int) -> Generator[tuple[int, int], None, None]:
 
 
 def increment_values(
-    data: dict[tuple[int, int], int], x: int, y: int, flashes: int
-) -> tuple[list[list[int]], int]:
-    data[x][y] == 0
+    data: dict[tuple[int, int], int], coords: tuple[int, int], flashes: int
+) -> tuple[dict[tuple[int, int], int], int]:
+
+    row, col = coords
+    data[row, col] == 0
     flashes += 1
 
-    for pt in adjacent(x, y):
+    for pt in adjacent(row, col):
         r, c = pt
 
-        if check_flash(data[r][c]):
-            data, flashes = increment_values(data, r, c, flashes)
+        if r < 0 or c < 0 or (r, c) not in data.keys():
+            continue
+
+        if check_flash(data[r, c]):
+            # This line is constantly looping between data[1,1] and data[1,2], and appears to be due to
+            # some kind of incrementing issue, or the values not updating on line 40?
+            data, flashes = increment_values(data, (r, c), flashes)
 
     return data, flashes
 
 
-def flashing_octopi(data: dict[tuple[int, int], int], iterations: int, flashes: int):
+def flashing_octopi(
+    data: dict[tuple[int, int], int], iterations: int, flashes: int
+) -> int:
     flashes = 0
 
-    for col, line in enumerate(data):
-        for row, val in enumerate(line):
-            if check_flash(val):
-                data, flashes = increment_values(data, col, row, flashes)
-
-            else:
-                val += 1
+    for coords, octo in data.items():
+        if check_flash(octo):
+            data, flashes = increment_values(data, coords, flashes)
+        else:
+            octo += 1
 
     iterations -= 1
 
     if iterations == 0:
         return flashes
     else:
-        flashing_octopi(data, iterations, flashes)
+        flashes = flashing_octopi(data, iterations, flashes)
+
+    return 0
 
 
 def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
