@@ -35,9 +35,10 @@ def adjacent(x: int, y: int) -> Generator[tuple[int, int], None, None]:
 def increment_values(
     data: dict[tuple[int, int], int], coords: tuple[int, int], flashes: int
 ) -> tuple[dict[tuple[int, int], int], int]:
+    # This should be recursive
 
     row, col = coords
-    data[row, col] == 0
+    data[row, col] = 0
     flashes += 1
 
     for pt in adjacent(row, col):
@@ -47,38 +48,26 @@ def increment_values(
             continue
 
         if check_flash(data[r, c]):
-            # This line is constantly looping between data[1,1] and data[1,2], and appears to be due to
-            # some kind of incrementing issue, or the values not updating on line 40?
             data, flashes = increment_values(data, (r, c), flashes)
 
     return data, flashes
 
 
-def flashing_octopi(
-    data: dict[tuple[int, int], int], iterations: int, flashes: int
-) -> int:
-    flashes = 0
-
-    for coords, octo in data.items():
-        if check_flash(octo):
-            data, flashes = increment_values(data, coords, flashes)
-        else:
-            octo += 1
-
-    iterations -= 1
-
-    if iterations == 0:
-        return flashes
-    else:
-        flashes = flashing_octopi(data, iterations, flashes)
-
-    return 0
-
-
+# Part 1
 def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
     data: dict[tuple[int, int], int] = parse_input(rawData)
+    flashes = 0
 
-    return flashing_octopi(data, iterations, 0)
+    for i in range(iterations):
+        for coords, octo in data.items():
+            if check_flash(octo):
+                data, flash_count = increment_values(data, coords, flashes)
+                flashes += flash_count
+            else:
+                r, c = coords
+                data[r, c] += 1
+
+    return flashes
 
 
 def main(filename: str) -> int:
