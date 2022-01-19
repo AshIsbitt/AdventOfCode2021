@@ -41,13 +41,12 @@ def check_surroundings(
 
     for pt in surroundings(r, c):
         x, y = pt
-        if x < 0 or y < 0:
-            continue
 
-        data[(x, y)] += 1
+        if (x, y) in data.keys():
+            data[x, y] += 1
 
-        if detect_flash(data, (x, y)):
-            surrounding_flashes += 1
+            if detect_flash(data, (x, y)):
+                surrounding_flashes += 1
 
     return data, surrounding_flashes
 
