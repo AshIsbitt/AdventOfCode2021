@@ -74,6 +74,9 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
                 r, c = coords
                 data[(r, c)] = 0
 
+        print(data)
+        print(flashes)
+
     return flashes
 
 
@@ -125,7 +128,7 @@ test_data_2: str = """5483143223
 @pytest.mark.parametrize(
     ("input_data", "iterations", "expected"),
     [
-        (test_data_1, 3, 9),
+        (test_data_1, 2, 9),
         (test_data_2, 10, 204),
         (test_data_2, 100, 1656),
     ],
