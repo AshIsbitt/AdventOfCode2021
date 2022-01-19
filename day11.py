@@ -17,11 +17,12 @@ def parse_input(rawData: str) -> dict[tuple[int, int], int]:
     return data
 
 
-def check_flash(val: int) -> bool:
-    return True if val >= 9 else False
+def detect_flash(data: dict[tuple[int, int], int], coords: tuple[int, int]) -> bool:
+    r, c = coords
+    return True if data[(r, c)] == 10 else False
 
 
-def adjacent(x: int, y: int) -> Generator[tuple[int, int], None, None]:
+def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
     yield (x - 1, y - 1)
     yield (x - 1, y)
     yield (x - 1, y + 1)
@@ -32,25 +33,23 @@ def adjacent(x: int, y: int) -> Generator[tuple[int, int], None, None]:
     yield (x + 1, y + 1)
 
 
-def increment_values(
-    data: dict[tuple[int, int], int], coords: tuple[int, int], flashes: int
+def check_surroundings(
+    data: dict[tuple[int, int], int], coords: tuple[int, int]
 ) -> tuple[dict[tuple[int, int], int], int]:
-    # This should be recursive
+    r, c = coords
+    surrounding_flashes = 0
 
-    row, col = coords
-    data[row, col] = 0
-    flashes += 1
-
-    for pt in adjacent(row, col):
-        r, c = pt
-
-        if r < 0 or c < 0 or (r, c) not in data.keys():
+    for pt in surroundings(r, c):
+        x, y = pt
+        if x < 0 or y < 0:
             continue
 
-        if check_flash(data[r, c]):
-            data, flashes = increment_values(data, (r, c), flashes)
+        data[(x, y)] += 1
 
-    return data, flashes
+        if detect_flash(data, (x, y)):
+            surrounding_flashes += 1
+
+    return data, surrounding_flashes
 
 
 # Part 1
@@ -60,12 +59,21 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
 
     for i in range(iterations):
         for coords, octo in data.items():
-            if check_flash(octo):
-                data, flash_count = increment_values(data, coords, flashes)
-                flashes += flash_count
-            else:
+            r, c = coords
+            data[(r, c)] += 1
+
+            # Then, any octopus with an energy level greater than 9 flashes.
+            if detect_flash(data, coords):
+                flashes += 1
+
+                ret = check_surroundings(data, coords)
+                data = ret[0]
+                flashes += ret[1]
+
+        for coords, octo in data.items():
+            if octo > 9:
                 r, c = coords
-                data[r, c] += 1
+                data[(r, c)] = 0
 
     return flashes
 
