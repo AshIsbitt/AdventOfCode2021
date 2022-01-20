@@ -1,5 +1,3 @@
-# Part 1: Given the starting energy levels of the dumbo octopuses in your
-# cavern, simulate 100 steps. How many total flashes are there after 100 steps?
 import pprint as p
 from typing import Generator
 
@@ -7,19 +5,30 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def parse_input(rawData: str) -> dict[tuple[int, int], int]:
+def parse_input(rawData: str) -> tuple[dict[tuple[int, int], int], int]:
     data = {}
+    line_len = 0
 
     for x, line in enumerate(rawData.splitlines()):
+        line_len = len(line[0])
         for y, val in enumerate(line):
             data[(x, y)] = int(val)
+
+    return data, line_len
+
+
+def increment_all_values(
+    data: dict[tuple[int, int], int]
+) -> dict[tuple[int, int], int]:
+    for k in data.keys():
+        x, y = k
+        data[x, y] += 1
 
     return data
 
 
 def detect_flash(data: dict[tuple[int, int], int], coords: tuple[int, int]) -> bool:
-    r, c = coords
-    return True if data[(r, c)] == 10 else False
+    return True if data[(coords)] >= 10 else False
 
 
 def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
@@ -34,11 +43,11 @@ def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
 
 
 def check_surroundings(
-    data: dict[tuple[int, int], int], coords: tuple[int, int]
+    data: dict[tuple[int, int], int], coords: tuple[int, int], line_len: int
 ) -> tuple[dict[tuple[int, int], int], int]:
-    r, c = coords
     surrounding_flashes = 0
 
+    r, c = coords
     for pt in surroundings(r, c):
         x, y = pt
 
@@ -47,35 +56,39 @@ def check_surroundings(
 
             if detect_flash(data, (x, y)):
                 surrounding_flashes += 1
+                data[x, y] = -1
+
+                ret = check_surroundings(data, coords, line_len)
+                data = ret[0]
+                surrounding_flashes += ret[1]
 
     return data, surrounding_flashes
 
 
 # Part 1
 def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
-    data: dict[tuple[int, int], int] = parse_input(rawData)
+    data, line_len = parse_input(rawData)
     flashes = 0
 
     for i in range(iterations):
-        for coords, octo in data.items():
-            r, c = coords
-            data[(r, c)] += 1
+        data = increment_all_values(data)
 
+        for coords, octo in data.items():
             # Then, any octopus with an energy level greater than 9 flashes.
             if detect_flash(data, coords):
                 flashes += 1
 
-                ret = check_surroundings(data, coords)
+                x, y = coords
+                data[x, y] = -1
+
+                ret = check_surroundings(data, coords, line_len)
                 data = ret[0]
                 flashes += ret[1]
 
         for coords, octo in data.items():
-            if octo > 9:
+            if octo == -1:
                 r, c = coords
                 data[(r, c)] = 0
-
-        print(data)
-        print(flashes)
 
     return flashes
 
