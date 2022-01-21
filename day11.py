@@ -150,13 +150,11 @@ def test_calculate_flashing_octopi(
 
 
 # Part 2 test
-"""
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
-        (test_data, 0),
-    ]
+        (test_data_2, 195),
+    ],
 )
-def test_f(input_data: list[int], expected: int) -> None:
-    assert f(input_data) == expected
-"""
+def test_find_sync_point(input_data: str, expected: int) -> None:
+    assert find_sync_point(input_data) == expected
