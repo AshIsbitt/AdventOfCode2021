@@ -35,7 +35,8 @@ def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
 
 
 # Part 1
-def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
+# Part 2
+def calculate_flashing_octopi(rawData: str, iterations: int, part2: bool) -> int:
     data = parse_input(rawData)
     flashes = 0
 
@@ -65,6 +66,9 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
                 if detect_flash(data, pt):
                     flashing_octos.add(pt)
 
+        if part2 and flashes_per_iter == len(data):
+            return i + 1
+
         for coords, octo in data.items():
             if octo < 0:
                 r, c = coords
@@ -73,20 +77,6 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
         flashes += flashes_per_iter
 
     return flashes
-
-
-# Part 2
-def find_sync_point(rawData: str) -> int:
-    data = parse_input(rawData)
-
-    step = 0
-    in_sync = False
-
-    while not in_sync:
-        print(data)
-        pass
-
-    return step
 
 
 def main(filename: str) -> int:
@@ -98,11 +88,11 @@ def main(filename: str) -> int:
     elif "ff" in filename:
         print("Browser: Firefox")
 
-    p1 = calculate_flashing_octopi(rawData, 100)
+    p1 = calculate_flashing_octopi(rawData, 100, False)
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    p2 = find_sync_point(rawData)
+    p2 = calculate_flashing_octopi(rawData, 500, True)
     pyp.copy(p2)
     print(f"Part 2: {p2}")
 
@@ -110,8 +100,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day11.txt"))
-    raise SystemExit(main("input_sri/day11.txt"))
+    raise SystemExit(main("input_ff/day11.txt"))
+    # raise SystemExit(main("input_sri/day11.txt"))
 
 
 # Tests
@@ -146,15 +136,17 @@ test_data_2: str = """5483143223
 def test_calculate_flashing_octopi(
     input_data: str, iterations: int, expected: int
 ) -> None:
-    assert calculate_flashing_octopi(input_data, iterations) == expected
+    assert calculate_flashing_octopi(input_data, iterations, False) == expected
 
 
 # Part 2 test
 @pytest.mark.parametrize(
-    ("input_data", "expected"),
+    ("input_data", "iterations", "expected"),
     [
-        (test_data_2, 195),
+        (test_data_2, 195, 195),
     ],
 )
-def test_find_sync_point(input_data: str, expected: int) -> None:
-    assert find_sync_point(input_data) == expected
+def test_calculate_flashing_octopi_2(
+    input_data: str, iterations: int, expected: int
+) -> None:
+    assert calculate_flashing_octopi(input_data, iterations, True) == expected
