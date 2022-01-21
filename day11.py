@@ -21,7 +21,7 @@ def parse_input(rawData: str) -> tuple[dict[tuple[int, int], int], int]:
 
 def detect_flash(data: dict[tuple[int, int], int], coords: tuple[int, int]) -> bool:
     x, y = coords
-    return True if data[x, y] >= 10 else False
+    return True if data[x, y] > 9 else False
 
 
 def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
@@ -53,7 +53,7 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
 
         while flashing_octos:
             coord = flashing_octos.pop()
-            data[coord] = -10
+            data[coord] = -15
             flashes_per_iter += 1
 
             x, y = coord
@@ -63,7 +63,6 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
                 except KeyError:
                     continue
 
-                r, c = pt
                 if detect_flash(data, pt):
                     flashing_octos.add(pt)
 
@@ -73,6 +72,7 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
                 data[(r, c)] = 0
 
         flashes += flashes_per_iter
+        print(flashes)
 
     return flashes
 
@@ -126,6 +126,7 @@ test_data_2: str = """5483143223
     ("input_data", "iterations", "expected"),
     [
         (test_data_1, 2, 9),
+        (test_data_2, 2, 35),
         (test_data_2, 10, 204),
         (test_data_2, 100, 1656),
     ],
