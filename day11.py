@@ -19,18 +19,9 @@ def parse_input(rawData: str) -> tuple[dict[tuple[int, int], int], int]:
     return data, line_len
 
 
-def increment_all_values(
-    data: dict[tuple[int, int], int]
-) -> dict[tuple[int, int], int]:
-    for k in data.keys():
-        x, y = k
-        data[x, y] += 1
-
-    return data
-
-
 def detect_flash(data: dict[tuple[int, int], int], coords: tuple[int, int]) -> bool:
-    return True if data[(coords)] == 10 else False
+    x, y = coords
+    return True if data[x, y] >= 10 else False
 
 
 def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
@@ -44,51 +35,44 @@ def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
     yield (x + 1, y + 1)
 
 
-def check_surroundings(
-    data: dict[tuple[int, int], int], coords: tuple[int, int], line_len: int
-) -> tuple[dict[tuple[int, int], int], int]:
-    surrounding_flashes = 0
-
-    r, c = coords
-    for pt in surroundings(r, c):
-        x, y = pt
-
-        if (x, y) in data.keys():
-            data[x, y] += 1
-
-            if detect_flash(data, (x, y)):
-                surrounding_flashes += 1
-
-                ret = check_surroundings(data, coords, line_len)
-                data = ret[0]
-                surrounding_flashes += ret[1]
-
-    return data, surrounding_flashes
-
-
 # Part 1
 def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
     data, line_len = parse_input(rawData)
     flashes = 0
 
     for i in range(iterations):
-        data = increment_all_values(data)
+        flashing_octos = set()
+        flashes_per_iter = 0
 
         for coords, octo in data.items():
-            # Then, any octopus with an energy level greater than 9 flashes.
+            x, y = coords
+            data[x, y] += 1
+
             if detect_flash(data, coords):
-                flashes += 1
+                flashing_octos.add(coords)
 
-                x, y = coords
+        while flashing_octos:
+            coord = flashing_octos.pop()
+            data[coord] = -10
+            flashes_per_iter += 1
 
-                ret = check_surroundings(data, coords, line_len)
-                data = ret[0]
-                flashes += ret[1]
+            x, y = coord
+            for pt in surroundings(x, y):
+                try:
+                    data[pt] += 1
+                except KeyError:
+                    continue
+
+                r, c = pt
+                if detect_flash(data, pt):
+                    flashing_octos.add(pt)
 
         for coords, octo in data.items():
-            if octo == -1:
+            if octo < 0:
                 r, c = coords
                 data[(r, c)] = 0
+
+        flashes += flashes_per_iter
 
     return flashes
 
