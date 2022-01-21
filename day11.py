@@ -1,5 +1,6 @@
 # Part 1: Given the starting energy levels of the dumbo octopuses in your
 # cavern, simulate 100 steps. How many total flashes are there after 100 steps?
+# Part 2: What is the first step during which all octopuses flash?
 import pprint as p
 from typing import Generator
 
@@ -7,16 +8,14 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def parse_input(rawData: str) -> tuple[dict[tuple[int, int], int], int]:
+def parse_input(rawData: str) -> dict[tuple[int, int], int]:
     data = {}
-    line_len = 0
 
     for x, line in enumerate(rawData.splitlines()):
-        line_len = len(line[0])
         for y, val in enumerate(line):
             data[(x, y)] = int(val)
 
-    return data, line_len
+    return data
 
 
 def detect_flash(data: dict[tuple[int, int], int], coords: tuple[int, int]) -> bool:
@@ -37,7 +36,7 @@ def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
 
 # Part 1
 def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
-    data, line_len = parse_input(rawData)
+    data = parse_input(rawData)
     flashes = 0
 
     for i in range(iterations):
@@ -76,6 +75,20 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
     return flashes
 
 
+# Part 2
+def find_sync_point(rawData: str) -> int:
+    data = parse_input(rawData)
+
+    step = 0
+    in_sync = False
+
+    while not in_sync:
+        print(data)
+        pass
+
+    return step
+
+
 def main(filename: str) -> int:
     with open(filename) as inputData:
         rawData: str = inputData.read()
@@ -89,9 +102,9 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = find_sync_point(rawData)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
