@@ -1,3 +1,5 @@
+# Part 1: Given the starting energy levels of the dumbo octopuses in your
+# cavern, simulate 100 steps. How many total flashes are there after 100 steps?
 import pprint as p
 from typing import Generator
 
@@ -28,7 +30,7 @@ def increment_all_values(
 
 
 def detect_flash(data: dict[tuple[int, int], int], coords: tuple[int, int]) -> bool:
-    return True if data[(coords)] >= 10 else False
+    return True if data[(coords)] == 10 else False
 
 
 def surroundings(x: int, y: int) -> Generator[tuple[int, int], None, None]:
@@ -56,7 +58,6 @@ def check_surroundings(
 
             if detect_flash(data, (x, y)):
                 surrounding_flashes += 1
-                data[x, y] = -1
 
                 ret = check_surroundings(data, coords, line_len)
                 data = ret[0]
@@ -79,7 +80,6 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
                 flashes += 1
 
                 x, y = coords
-                data[x, y] = -1
 
                 ret = check_surroundings(data, coords, line_len)
                 data = ret[0]
