@@ -72,7 +72,6 @@ def calculate_flashing_octopi(rawData: str, iterations: int) -> int:
                 data[(r, c)] = 0
 
         flashes += flashes_per_iter
-        print(flashes)
 
     return flashes
 
@@ -98,8 +97,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day01.txt"))
-    raise SystemExit(main("input_sri/day01.txt"))
+    # raise SystemExit(main("input_ff/day11.txt"))
+    raise SystemExit(main("input_sri/day11.txt"))
 
 
 # Tests
