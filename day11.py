@@ -125,28 +125,16 @@ test_data_2: str = """5483143223
 
 # Part 1 test
 @pytest.mark.parametrize(
-    ("input_data", "iterations", "expected"),
+    ("input_data", "iterations", "toggle", "expected"),
     [
-        (test_data_1, 2, 9),
-        (test_data_2, 2, 35),
-        (test_data_2, 10, 204),
-        (test_data_2, 100, 1656),
+        (test_data_1, 2, False, 9),
+        (test_data_2, 2, False, 35),
+        (test_data_2, 10, False, 204),
+        (test_data_2, 100, False, 1656),
+        (test_data_2, 195, True, 195),
     ],
 )
 def test_calculate_flashing_octopi(
-    input_data: str, iterations: int, expected: int
+    input_data: str, iterations: int, toggle: bool, expected: int
 ) -> None:
-    assert calculate_flashing_octopi(input_data, iterations, False) == expected
-
-
-# Part 2 test
-@pytest.mark.parametrize(
-    ("input_data", "iterations", "expected"),
-    [
-        (test_data_2, 195, 195),
-    ],
-)
-def test_calculate_flashing_octopi_2(
-    input_data: str, iterations: int, expected: int
-) -> None:
-    assert calculate_flashing_octopi(input_data, iterations, True) == expected
+    assert calculate_flashing_octopi(input_data, iterations, toggle) == expected
