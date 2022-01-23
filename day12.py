@@ -1,21 +1,56 @@
 # Part 1: How many paths through this cave system are there that visit small
 # caves at most once?
+from collections import defaultdict
+from collections import deque
+
 import pyperclip as pyp  # type: ignore
 import pytest
 
 
+def parse_input(rawData: str) -> dict[str, list[str]]:
+    """Create an adjacency list to store the graph"""
+    data = defaultdict(list)
+
+    for line in rawData.splitlines():
+        src, dest = line.split("-")
+        data[src].append(dest)
+        data[dest].append(src)
+
+    return data
+
+
 # Part 1
-def path_mapping(rawData: list[str]) -> int:
+# Part 2
+def path_mapping(rawData: str, part2: bool = False) -> int:
+    edges = parse_input(rawData)
+
     num_of_routes = 0
+    # Where we are, caves we've visited, if we've visited any single cave before
+    start = ("start", set(["start"]), False)
+    queue = deque([start])
+
+    while queue:
+        pos, caves, is_visited = queue.popleft()
+
+        if pos == "end":
+            num_of_routes += 1
+            continue
+
+        for node in edges[pos]:
+            if node not in caves:
+                new_caves = set(caves)
+
+                if node.islower():
+                    new_caves.add(node)
+
+                queue.append((node, new_caves, is_visited))
 
     return num_of_routes
 
 
 def main(filename: str) -> int:
     with open(filename) as inputData:
-        rawData = inputData.readlines()
-
-    print(rawData)
+        rawData = inputData.read()
 
     if "sri" in filename:
         print("Browser: Safari")
@@ -26,9 +61,9 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = path_mapping(rawData, True)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
@@ -39,73 +74,58 @@ if __name__ == "__main__":
 
 
 # Tests
-test_data: list[str] = [
-    "start-A",
-    "start-b",
-    "A-c",
-    "A-b",
-    "b-d",
-    "A-end",
-    "b-end",
-]
-
-test_data_2 = [
-    "dc-end",
-    "HN-start",
-    "start-kj",
-    "dc-start",
-    "dc-HN",
-    "LN-dc",
-    "HN-end",
-    "kj-sa",
-    "kj-HN",
-    "kj-dc",
-]
+test_data = """start-A
+start-b
+A-c
+A-b
+b-d
+A-end
+b-end"""
 
 
-test_data_3 = [
-    "fs-end",
-    "he-DX",
-    "fs-he",
-    "start-DX",
-    "pj-DX",
-    "end-zg",
-    "zg-sl",
-    "zg-pj",
-    "pj-he",
-    "RW-he",
-    "fs-DX",
-    "pj-RW",
-    "zg-RW",
-    "start-pj",
-    "he-WI",
-    "zg-he",
-    "pj-fs",
-    "start-RW",
-]
+test_data_2 = """dc-end
+HN-start
+start-kj
+dc-start
+dc-HN
+LN-dc
+HN-end
+kj-sa
+kj-HN
+kj-dc"""
+
+
+test_data_3 = """fs-end
+he-DX
+fs-he
+start-DX
+pj-DX
+end-zg
+zg-sl
+zg-pj
+pj-he
+RW-he
+fs-DX
+pj-RW
+zg-RW
+start-pj
+he-WI
+zg-he
+pj-fs
+start-RW"""
 
 
 # Part 1 test
 @pytest.mark.parametrize(
-    ("input_data", "expected"),
+    ("args"),
     [
         (test_data, 10),
         (test_data_2, 19),
         (test_data_3, 226),
+        (test_data, True, 36),
+        (test_data_2, True, 103),
+        (test_data_3, True, 3509),
     ],
 )
-def test_path_mapping(input_data, expected):
-    assert path_mapping(input_data) == expected
-
-
-# Part 2 test
-"""
-@pytest.mark.parametrize(
-    ("input_data", "expected"),
-    [
-        (test_data, 0),
-    ]
-)
-def test_f(input_data: list[int], expected: int) -> None:
-    assert f(input_data) == expected
-"""
+def test_path_mapping(args):
+    assert path_mapping(*args[:-1]) == args[-1]
