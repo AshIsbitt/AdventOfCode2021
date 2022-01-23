@@ -1,5 +1,7 @@
 # Part 1: How many paths through this cave system are there that visit small
 # caves at most once?
+# Part 2: Given these new rules, how many paths through this cave system are
+# there?
 from collections import defaultdict
 from collections import deque
 
@@ -19,13 +21,22 @@ def parse_input(rawData: str) -> dict[str, list[str]]:
     return data
 
 
-# Part 1
 # Part 2
-def path_mapping(rawData: str, part2: bool = False) -> int:
+def path_mapping_plus(rawData: str) -> int:
+    edges = parse_input(rawData)
+    print(edges)
+
+    num_of_routes = 0
+
+    return num_of_routes
+
+
+# Part 1
+def path_mapping(rawData: str) -> int:
     edges = parse_input(rawData)
 
     num_of_routes = 0
-    # Where we are, caves we've visited, if we've visited any single cave before
+    # Where we are, caves we've visited
     start = ("start", set(["start"]), False)
     queue = deque([start])
 
@@ -61,7 +72,7 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    p2 = path_mapping(rawData, True)
+    p2 = path_mapping_plus(rawData)
     pyp.copy(p2)
     print(f"Part 2: {p2}")
 
@@ -122,10 +133,20 @@ start-RW"""
         (test_data, 10),
         (test_data_2, 19),
         (test_data_3, 226),
-        (test_data, True, 36),
-        (test_data_2, True, 103),
-        (test_data_3, True, 3509),
     ],
 )
 def test_path_mapping(args):
     assert path_mapping(*args[:-1]) == args[-1]
+
+
+# Part 2 tests
+@pytest.mark.parametrize(
+    ("args"),
+    [
+        (test_data, 36),
+        (test_data_2, 103),
+        (test_data_3, 3509),
+    ],
+)
+def test_path_mapping_plus(args):
+    assert path_mapping_plus(*args[:-1]) == args[-1]
