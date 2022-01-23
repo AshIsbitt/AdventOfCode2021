@@ -24,16 +24,6 @@ def parse_input(rawData: str) -> dict[str, list[str]]:
 # Part 2
 def path_mapping_plus(rawData: str) -> int:
     edges = parse_input(rawData)
-    print(edges)
-
-    num_of_routes = 0
-
-    return num_of_routes
-
-
-# Part 1
-def path_mapping(rawData: str) -> int:
-    edges = parse_input(rawData)
 
     num_of_routes = 0
     # Where we are, caves we've visited
@@ -48,13 +38,45 @@ def path_mapping(rawData: str) -> int:
             continue
 
         for node in edges[pos]:
+            if node == "start":
+                continue
+            elif node.islower() and node not in caves:
+                new_caves = set(caves)
+                new_caves.add(node)
+
+                queue.append((node, new_caves, is_visited))
+            elif node.isupper():
+                queue.append((node, caves, is_visited))
+            elif not is_visited and node in caves:
+                queue.append((node, caves, True))
+
+    return num_of_routes
+
+
+# Part 1
+def path_mapping(rawData: str) -> int:
+    edges = parse_input(rawData)
+
+    num_of_routes = 0
+    # Where we are, caves we've visited
+    start = ("start", set(["start"]))
+    queue = deque([start])
+
+    while queue:
+        pos, caves = queue.popleft()
+
+        if pos == "end":
+            num_of_routes += 1
+            continue
+
+        for node in edges[pos]:
             if node not in caves:
                 new_caves = set(caves)
 
                 if node.islower():
                     new_caves.add(node)
 
-                queue.append((node, new_caves, is_visited))
+                queue.append((node, new_caves))
 
     return num_of_routes
 
@@ -80,8 +102,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day12.txt"))
-    raise SystemExit(main("input_sri/day12.txt"))
+    raise SystemExit(main("input_ff/day12.txt"))
+    # raise SystemExit(main("input_sri/day12.txt"))
 
 
 # Tests
