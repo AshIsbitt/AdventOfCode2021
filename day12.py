@@ -4,8 +4,11 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def f():
-    pass
+# Part 1
+def path_mapping(rawData: list[str]) -> int:
+    num_of_routes = 0
+
+    return num_of_routes
 
 
 def main(filename: str) -> int:
@@ -19,7 +22,7 @@ def main(filename: str) -> int:
     elif "ff" in filename:
         print("Browser: Firefox")
 
-    p1 = 0
+    p1 = path_mapping(rawData)
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
@@ -60,16 +63,39 @@ test_data_2 = [
 ]
 
 
+test_data_3 = [
+    "fs-end",
+    "he-DX",
+    "fs-he",
+    "start-DX",
+    "pj-DX",
+    "end-zg",
+    "zg-sl",
+    "zg-pj",
+    "pj-he",
+    "RW-he",
+    "fs-DX",
+    "pj-RW",
+    "zg-RW",
+    "start-pj",
+    "he-WI",
+    "zg-he",
+    "pj-fs",
+    "start-RW",
+]
+
+
 # Part 1 test
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
         (test_data, 10),
         (test_data_2, 19),
+        (test_data_3, 226),
     ],
 )
-def test_f(input_data, expected):
-    assert f(input_data) == expected
+def test_path_mapping(input_data, expected):
+    assert path_mapping(input_data) == expected
 
 
 # Part 2 test
