@@ -4,16 +4,31 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def parse_input(rawData: str) -> int:
-    pass
+def parse_input(rawData: str) -> tuple[list[tuple[int, int]], list[tuple[str, int]]]:
+    fold_list: list[tuple[str, int]] = []
+    points_list: list[tuple[int, int]] = []
+
+    points, folds = rawData.split("\n\n")
+
+    for line in folds.splitlines():
+        fa = line[11:]
+        a, b = fa.split("=")
+        fold_list.append((a, int(b)))
+
+    for line in points.splitlines():
+        a, b = line.split(",")
+        points_list.append((int(a), int(b)))
+
+    return (points_list, fold_list)
 
 
 # Part 1
 def first_fold(rawData: str) -> int:
-    data = parse_input(rawData)
-    print(data)
+    points, folds = parse_input(rawData)
+    print(points)
+    print(folds)
 
-    return data
+    return 0
 
 
 def main(filename: str) -> int:
