@@ -37,21 +37,23 @@ def get_length(points: set[tuple[int, int]]) -> tuple[int, int]:
 
 def fold_paper(
     points: set[tuple[int, int]], instruction: tuple[str, int], length: tuple[int, int]
-):
-    # For item with coord value higher than instruction
-    # length of line - current position
+) -> set[tuple[int, int]]:
 
     operand = 0 if instruction[0] == "x" else 1
+    new_points = set()
 
     for item in points:
         if item[operand] > instruction[1]:
-            x, y = item
-            newval = length[operand] - item[operand]
-            item = (newval, y) if operand == "x" else (x, newval)
-        elif item[operand] == instruction[1]:
-            points.remove(item)
+            spacer = item[operand] - instruction[1]
+            new_val = item[operand] - (spacer * 2)
 
-    return points
+            x, y = item
+            item = (new_val, y) if operand == 0 else (x, new_val)
+            new_points.add(item)
+        elif item[operand] < instruction[1]:
+            new_points.add(item)
+
+    return new_points
 
 
 # Part 1
@@ -59,7 +61,7 @@ def first_fold(rawData: str) -> int:
     points, folds = parse_input(rawData)
 
     length = get_length(points)
-    fold_paper(points, folds[0], length)
+    points = fold_paper(points, folds[0], length)
     return len(points)
 
 
