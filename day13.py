@@ -66,12 +66,18 @@ def first_fold(rawData: str) -> int:
 
 
 def display_sheet(points: set[tuple[int, int]], length: tuple[int, int]):
-    for y in range(length[1]):
-        for x in range(length[0]):
+    for y in range(int(length[1] / 2)):
+        for x in range(int(length[0] / 2)):
+            if len(points) == 0:
+                print("\n")
+                return
+
             if (x, y) in points:
                 print("X", end="")
+                points.discard((x, y))
             else:
                 print(".", end="")
+
         print("", end="\n")
 
 
@@ -100,7 +106,7 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    p2 = 0
+    p2 = complete_fold(rawData)
     pyp.copy(p2)
     print(f"Part 2: {p2}")
 
