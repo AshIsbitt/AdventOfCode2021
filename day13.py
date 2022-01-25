@@ -1,5 +1,7 @@
 # Part 1: How many dots are visible after completing just the first fold
 # instruction on your transparent paper?
+# Part 2: What code do you use to activate the infrared thermal imaging camera
+# system?
 import pyperclip as pyp  # type: ignore
 import pytest
 
@@ -65,6 +67,19 @@ def first_fold(rawData: str) -> int:
     return len(points)
 
 
+def get_output_dimensions(folds: list[tuple[str, int]]) -> tuple[int, int]:
+    x = 0
+    y = 0
+
+    for inst in folds:
+        if inst[0] == "x":
+            x += 1
+        elif inst[0] == "y":
+            y += 1
+
+    return (x, y)
+
+
 def display_sheet(points: set[tuple[int, int]], length: tuple[int, int]):
     for y in range(int(length[1] / 2)):
         for x in range(int(length[0] / 2)):
@@ -89,6 +104,7 @@ def complete_fold(rawData: str) -> int:
     for instruction in folds:
         points = fold_paper(points, instruction, length)
 
+    # size = get_output_dimensions(folds)
     display_sheet(points, length)
     return 0
 
