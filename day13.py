@@ -4,9 +4,9 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def parse_input(rawData: str) -> tuple[list[tuple[int, int]], list[tuple[str, int]]]:
+def parse_input(rawData: str) -> tuple[set[tuple[int, int]], list[tuple[str, int]]]:
     fold_list: list[tuple[str, int]] = []
-    points_list: list[tuple[int, int]] = []
+    points_list: set[tuple[int, int]] = set()
 
     points, folds = rawData.split("\n\n")
 
@@ -17,18 +17,50 @@ def parse_input(rawData: str) -> tuple[list[tuple[int, int]], list[tuple[str, in
 
     for line in points.splitlines():
         a, b = line.split(",")
-        points_list.append((int(a), int(b)))
+        points_list.add((int(a), int(b)))
 
     return (points_list, fold_list)
+
+
+def get_length(points: set[tuple[int, int]]) -> tuple[int, int]:
+    x_val = 0
+    y_val = 0
+
+    for item in points:
+        if item[0] > x_val:
+            x_val = item[0]
+        if item[1] > y_val:
+            y_val = item[1]
+
+    return (x_val, y_val)
+
+
+def fold_paper(
+    points: set[tuple[int, int]], instruction: tuple[str, int], length: tuple[int, int]
+):
+    # For item with coord value higher than instruction
+    # length of line - current position
+
+    operand = 0 if instruction[0] == "x" else 1
+
+    for item in points:
+        if item[operand] > instruction[1]:
+            x, y = item
+            newval = length[operand] - item[operand]
+            item = (newval, y) if operand == "x" else (x, newval)
+        elif item[operand] == instruction[1]:
+            points.remove(item)
+
+    return points
 
 
 # Part 1
 def first_fold(rawData: str) -> int:
     points, folds = parse_input(rawData)
-    print(points)
-    print(folds)
 
-    return 0
+    length = get_length(points)
+    fold_paper(points, folds[0], length)
+    return len(points)
 
 
 def main(filename: str) -> int:
