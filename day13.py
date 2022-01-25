@@ -65,6 +65,28 @@ def first_fold(rawData: str) -> int:
     return len(points)
 
 
+def display_sheet(points: set[tuple[int, int]], length: tuple[int, int]):
+    for y in range(length[1]):
+        for x in range(length[0]):
+            if (x, y) in points:
+                print("X", end="")
+            else:
+                print(".", end="")
+        print("", end="\n")
+
+
+# Part 2
+def complete_fold(rawData: str) -> int:
+    points, folds = parse_input(rawData)
+    length = get_length(points)
+
+    for instruction in folds:
+        points = fold_paper(points, instruction, length)
+
+    display_sheet(points, length)
+    return 0
+
+
 def main(filename: str) -> int:
     with open(filename) as inputData:
         rawData = inputData.read()
@@ -78,9 +100,9 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = 0
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
@@ -126,13 +148,11 @@ def test_first_fold(input_data, expected) -> None:
 
 
 # Part 2 test
-"""
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
         (test_data, 0),
-    ]
+    ],
 )
-def test_f(input_data, expected) -> None:
-    assert f(input_data) == expected
-"""
+def test_complete_fold(input_data, expected) -> None:
+    assert complete_fold(input_data) == expected
