@@ -85,6 +85,7 @@ def get_output_dimensions(
 
 def display_sheet(points: set[tuple[int, int]], length: tuple[int, int]):
     for y in range(int(length[1])):
+        print("|", end="")
         for x in range(int(length[0])):
             if (x, y) in points:
                 print("X", end="")
@@ -92,6 +93,10 @@ def display_sheet(points: set[tuple[int, int]], length: tuple[int, int]):
             else:
                 print(".", end="")
 
+            if x % 4 == 0:
+                print(".", end="")
+
+        print("|", end="")
         print("", end="\n")
 
 
@@ -121,9 +126,7 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    p2 = complete_fold(rawData)
-    pyp.copy(p2)
-    print(f"Part 2: {p2}")
+    complete_fold(rawData)
 
     return 0
 
