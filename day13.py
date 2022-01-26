@@ -84,20 +84,27 @@ def get_output_dimensions(
 
 
 def display_sheet(points: set[tuple[int, int]], length: tuple[int, int]):
+    print("Part 2:")
+    for x in range(int(length[0]) + 1):
+        print("🟥", end="")
+
+    print("", end="\n")
+
     for y in range(int(length[1])):
-        print("|", end="")
+        print("🟥", end="")
         for x in range(int(length[0])):
             if (x, y) in points:
-                print("X", end="")
+                print("🟩", end="")
                 points.discard((x, y))
             else:
-                print(".", end="")
+                print("🟥", end="")
 
-            if x % 4 == 0:
-                print(".", end="")
-
-        print("|", end="")
         print("", end="\n")
+
+    for x in range(int(length[0]) + 1):
+        print("🟥", end="")
+
+    print("", end="\n")
 
 
 # Part 2
