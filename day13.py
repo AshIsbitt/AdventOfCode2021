@@ -67,26 +67,25 @@ def first_fold(rawData: str) -> int:
     return len(points)
 
 
-def get_output_dimensions(folds: list[tuple[str, int]]) -> tuple[int, int]:
-    x = 0
-    y = 0
+def get_output_dimensions(
+    folds: list[tuple[str, int]], length: tuple[int, int]
+) -> tuple[int, int]:
+    # get length
+    # for item in folds, half length in that direction
+    x_len, y_len = length
 
     for inst in folds:
         if inst[0] == "x":
-            x += 1
+            x_len /= 2  # type: ignore
         elif inst[0] == "y":
-            y += 1
+            y_len /= 2  # type: ignore
 
-    return (x, y)
+    return (x_len, y_len)
 
 
 def display_sheet(points: set[tuple[int, int]], length: tuple[int, int]):
-    for y in range(int(length[1] / 2)):
-        for x in range(int(length[0] / 2)):
-            if len(points) == 0:
-                print("\n")
-                return
-
+    for y in range(int(length[1])):
+        for x in range(int(length[0])):
             if (x, y) in points:
                 print("X", end="")
                 points.discard((x, y))
@@ -104,8 +103,8 @@ def complete_fold(rawData: str) -> int:
     for instruction in folds:
         points = fold_paper(points, instruction, length)
 
-    # size = get_output_dimensions(folds)
-    display_sheet(points, length)
+    size = get_output_dimensions(folds, length)
+    display_sheet(points, size)
     return 0
 
 
@@ -130,8 +129,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day13.txt"))
-    raise SystemExit(main("input_sri/day13.txt"))
+    raise SystemExit(main("input_ff/day13.txt"))
+    # raise SystemExit(main("input_sri/day13.txt"))
 
 
 # Tests
