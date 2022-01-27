@@ -1,22 +1,37 @@
-# What to do
+# Part 1: What do you get if you take the quantity of the most common element
+# and subtract the quantity of the least common element?
 import pyperclip as pyp  # type: ignore
 import pytest
 
 
+def parse_input(rawData: str) -> tuple[str, list[tuple[str, str]]]:
+    lines = rawData.splitlines()
+    polymer = lines[0]
+    data = []
+
+    for item in lines[2:]:
+        vals = item.split(" -> ")
+        data.append((vals[0], vals[1]))
+
+    return polymer, data
+
+
+# Part 1
+def form_polymers(rawData: str, steps: int) -> int:
+    polymer, data = parse_input(rawData)
+    return 0
+
+
 def main(filename: str) -> int:
     with open(filename) as inputData:
-        rawData = inputData.readlines()
-    rawData = [line.rstrip("\n") for line in rawData]
-
-    # Convert to ints
-    # data = list(map(int, rawData))
+        rawData = inputData.read()
 
     if "sri" in filename:
         print("Browser: Safari")
     elif "ff" in filename:
         print("Browser: Firefox")
 
-    p1 = 0
+    p1 = form_polymers(rawData, 10)
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
@@ -28,23 +43,40 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day01.txt"))
-    raise SystemExit(main("input_sri/day01.txt"))
+    # raise SystemExit(main("input_ff/day14.txt"))
+    raise SystemExit(main("input_sri/day14.txt"))
 
 
 # Tests
-test_data: list[int] = []
+test_data = """NNCB
+
+CH -> B
+HH -> N
+CB -> H
+NH -> C
+HB -> C
+HC -> B
+HN -> C
+NN -> C
+BH -> H
+NC -> B
+NB -> B
+BN -> B
+BB -> N
+BC -> B
+CC -> N
+CN -> C"""
 
 
 # Part 1 test
 @pytest.mark.parametrize(
-    ("input_data", "expected"),
+    ("input_data", "steps", "expected"),
     [
-        (test_data, 0),
+        (test_data, 10, 1588),
     ],
 )
-def test_f(input_data: list[int], expected: int) -> None:
-    assert f(input_data) == expected
+def test_form_polymers(input_data, steps, expected):
+    assert form_polymers(input_data, steps) == expected
 
 
 # Part 2 test
