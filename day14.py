@@ -134,6 +134,21 @@ def test_form_polymers(input_data, steps, expected):
     assert form_polymers(input_data, steps) == expected
 
 
+@pytest.mark.parametrize(
+    ("input_", "steps", "expected"),
+    (
+        (test_data, 0, "NNCB"),
+        (test_data, 1, "NCNBCHB"),
+        (test_data, 2, "NBCCNBBBCBHCB"),
+        (test_data, 3, "NBBBCNCCNBBNBNBBCHBHHBCHB"),
+        (test_data, 4, "NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB"),
+    ),
+)
+def test_poly_growth(input_, steps, expected):
+    poly, data = parse_input(input_)
+    assert poly_growth(poly, data, steps) == expected
+
+
 # Part 2 test
 """
 @pytest.mark.parametrize(
