@@ -45,11 +45,7 @@ def get_previous_letters(poly: str, extra: bool = False) -> str:
         return poly[-3] + poly[-1]
 
 
-# Part 1
-def form_polymers(rawData: str, steps: int) -> int:
-    polymer, data = parse_input(rawData)
-    # inserted elements are not considered part of a pair until the next iteration
-
+def poly_growth(polymer: str, data: dict[str, str], steps: int) -> str:
     for _ in range(steps):
         new_polymer = ""
         is_extra = False
@@ -70,7 +66,14 @@ def form_polymers(rawData: str, steps: int) -> int:
 
         polymer = new_polymer
 
-    score = get_score(polymer)
+    return polymer
+
+
+# Part 1
+def form_polymers(rawData: str, steps: int) -> int:
+    polymer, data = parse_input(rawData)
+    poly = poly_growth(polymer, data, steps)
+    score = get_score(poly)
     return score
 
 
