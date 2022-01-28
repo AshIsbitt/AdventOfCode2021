@@ -21,10 +21,7 @@ def parse_input(rawData: str) -> tuple[str, dict[str, str]]:
 
 
 def get_score(poly: str) -> int:
-    char_count: dict[str, int] = Counter()
-
-    for char in poly:
-        char_count[char] += 1
+    char_count: dict[str, int] = Counter(poly)
 
     most_common = max(char_count.values())
     least_common = min(char_count.values())
