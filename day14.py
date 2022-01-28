@@ -1,6 +1,7 @@
 # Part 1: What do you get if you take the quantity of the most common element
 # and subtract the quantity of the least common element?
 import copy
+import pprint as p
 from collections import Counter
 
 import pyperclip as pyp  # type: ignore
@@ -29,6 +30,7 @@ def get_score(poly: str) -> int:
     least_common = min(char_count.values())
     score = most_common - least_common
 
+    print(char_count)
     return score
 
 
@@ -55,14 +57,18 @@ def form_polymers(rawData: str, steps: int) -> int:
         for letter in polymer:
             new_polymer += letter
 
-            if len(new_polymer) > 1:
-                sample = get_previous_letters(new_polymer, is_extra)
+            if len(new_polymer) < 2:
+                continue
 
-                if sample in data.keys():
-                    new_polymer += data[sample]
-                    is_extra = True
-                else:
-                    is_extra = False
+            sample = get_previous_letters(new_polymer, is_extra)
+
+            if sample in data.keys():
+                new_polymer += data[sample]
+                is_extra = True
+            else:
+                is_extra = False
+
+        polymer = new_polymer
 
     score = get_score(polymer)
     return score
