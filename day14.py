@@ -7,14 +7,14 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def parse_input(rawData: str) -> tuple[str, list[tuple[str, str]]]:
+def parse_input(rawData: str) -> tuple[str, dict[str, str]]:
     lines = rawData.splitlines()
-    polymer = lines[0]
-    data = []
+    polymer = lines[0].strip()
+    data = {}
 
     for item in lines[2:]:
         vals = item.split(" -> ")
-        data.append((vals[0], vals[1]))
+        data[vals[0]] = vals[1]
 
     return polymer, data
 
@@ -32,18 +32,37 @@ def get_score(poly: str) -> int:
     return score
 
 
+def print_data(a, b, c):
+    print(f"Polymer={a}, new_val={b}, inst[0]={c[0]}")
+
+
+def get_previous_letters(poly: str, extra: bool = False) -> str:
+    if not extra:
+        return poly[-2:]
+    else:
+        return poly[-3] + poly[-1]
+
+
 # Part 1
 def form_polymers(rawData: str, steps: int) -> int:
     polymer, data = parse_input(rawData)
+    # inserted elements are not considered part of a pair until the next iteration
 
     for _ in range(steps):
-        polymer_copy = copy.deepcopy(polymer)
+        new_polymer = ""
+        is_extra = False
 
-        for inst in data:
-            new_val = f"{inst[0]}{inst[1]}"
-            polymer_copy.replace(inst[0], new_val)
+        for letter in polymer:
+            new_polymer += letter
 
-        polymer = polymer_copy
+            if len(new_polymer) > 1:
+                sample = get_previous_letters(new_polymer, is_extra)
+
+                if sample in data.keys():
+                    new_polymer += data[sample]
+                    is_extra = True
+                else:
+                    is_extra = False
 
     score = get_score(polymer)
     return score
