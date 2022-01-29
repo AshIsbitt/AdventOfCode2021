@@ -20,57 +20,62 @@ def parse_input(rawData: str) -> tuple[str, dict[str, str]]:
     return polymer, data
 
 
-def get_score(poly: str) -> int:
-    char_count: dict[str, int] = Counter(poly)
+def get_score(poly: dict[str, int], final_char: str) -> int:
+    char_count: dict[str, int] = Counter()
+
+    for i in poly.keys():
+        char_count[i[0]] += poly[i]
+
+    char_count[final_char] += 1
 
     most_common = max(char_count.values())
     least_common = min(char_count.values())
     score = most_common - least_common
 
-    print(char_count)
     return score
 
 
-def print_data(a, b, c):
-    print(f"Polymer={a}, new_val={b}, inst[0]={c[0]}")
+def get_new(substr: str, data: dict[str, str]) -> tuple[str, str]:
+    new_char = data[substr]
+    a = substr[0] + new_char
+    b = new_char + substr[1]
+
+    return a, b
 
 
-def get_previous_letters(poly: str, extra: bool = False) -> str:
-    if not extra:
-        return poly[-2:]
-    else:
-        return poly[-3] + poly[-1]
+def poly_growth(polymer: str, data: dict[str, str], steps: int) -> dict[str, int]:
+    # {pair of chars : count of that pair}
+    patterns: dict[str, int] = Counter()
 
+    # propogate patterns with first iteration
+    for idx, letter in enumerate(polymer[1:]):
+        substr = polymer[idx - 1] + letter
+        new_substr = get_new(substr, data)
 
-def poly_growth(polymer: str, data: dict[str, str], steps: int) -> str:
-    for _ in range(steps):
-        new_polymer = ""
-        is_extra = False
+        patterns[new_substr[0]] += 1
+        patterns[new_substr[1]] += 1
 
-        for letter in polymer:
-            new_polymer += letter
+    # continually get more pairs
+    for _ in range(steps - 1):
+        iter_pairs: dict[str, int] = Counter()
 
-            if len(new_polymer) < 2:
-                continue
+        for pair in patterns:
+            new_substr = get_new(pair, data)
 
-            sample = get_previous_letters(new_polymer, is_extra)
+            iter_pairs[new_substr[0]] += 1
+            iter_pairs[new_substr[1]] += 1
 
-            if sample in data.keys():
-                new_polymer += data[sample]
-                is_extra = True
-            else:
-                is_extra = False
+        patterns = patterns + iter_pairs  # type: ignore
 
-        polymer = new_polymer
-
-    return polymer
+    return patterns
 
 
 # Part 1
 def form_polymers(rawData: str, steps: int) -> int:
     polymer, data = parse_input(rawData)
     poly = poly_growth(polymer, data, steps)
-    score = get_score(poly)
+
+    score = get_score(poly, polymer[-1])
     return score
 
 
