@@ -1,6 +1,6 @@
 # What to do
 import pprint as p
-from collections import counter
+from collections import Counter
 from collections import defaultdict
 
 import pyperclip as pyp  # type: ignore

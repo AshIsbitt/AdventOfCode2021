@@ -1,6 +1,6 @@
 # What to do
 import pprint as p
-from collections import counter
+from collections import Counter
 from collections import defaultdict
 
 import pyperclip as pyp  # type: ignore
@@ -9,11 +9,7 @@ import pytest
 
 def main(filename: str) -> int:
     with open(filename) as inputData:
-        rawData = inputData.readlines()
-    rawData = [line.rstrip("\n") for line in rawData]
-
-    # Convert to ints
-    # data = list(map(int, rawData))
+        rawData = inputData.read()
 
     if "sri" in filename:
         print("Browser: Safari")
@@ -37,7 +33,8 @@ if __name__ == "__main__":
 
 
 # Tests
-test_data: list[int] = []
+test_data = """
+"""
 
 
 # Part 1 test
@@ -47,7 +44,7 @@ test_data: list[int] = []
         (test_data, 0),
     ],
 )
-def test_f(input_data: list[int], expected: int) -> None:
+def test_f(input_data, expected):
     assert f(input_data) == expected
 
 
@@ -59,6 +56,6 @@ def test_f(input_data: list[int], expected: int) -> None:
         (test_data, 0),
     ]
 )
-def test_f(input_data: list[int], expected: int) -> None:
+def test_f(input_data, expected):
     assert f(input_data) == expected
 """
