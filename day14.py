@@ -1,5 +1,7 @@
 # Part 1: What do you get if you take the quantity of the most common element
 # and subtract the quantity of the least common element?
+# Part 2: Apply 40 steps of pair insertion to the polymer template and find the
+# most and least common elements in the result.
 import copy
 import pprint as p
 from collections import Counter
@@ -52,7 +54,7 @@ def poly_growth(polymer: str, data: dict[str, str], steps: int) -> dict[str, int
         patterns[new_substr[1]] += 1
 
     # continually get more pairs
-    for _ in range(steps):
+    for _ in range(steps - 1):
         iter_pairs: Counter[str] = Counter()
 
         for pair, count in patterns.items():
@@ -62,7 +64,6 @@ def poly_growth(polymer: str, data: dict[str, str], steps: int) -> dict[str, int
             iter_pairs[new_substr[1]] += count
 
         patterns = iter_pairs
-        print(iter_pairs)
 
     return patterns
 
@@ -98,8 +99,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day14.txt"))
-    raise SystemExit(main("input_sri/day14.txt"))
+    raise SystemExit(main("input_ff/day14.txt"))
+    # raise SystemExit(main("input_sri/day14.txt"))
 
 
 # Tests
@@ -128,6 +129,7 @@ CN -> C"""
     ("input_data", "steps", "expected"),
     [
         (test_data, 10, 1588),
+        (test_data, 40, 2188189693529),
     ],
 )
 def test_form_polymers(input_data, steps, expected):
