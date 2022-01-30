@@ -27,6 +27,7 @@ def get_score(poly: dict[str, int], final_char: str) -> int:
         char_count[i[0]] += poly[i]
 
     char_count[final_char] += 1
+    print(char_count)
 
     most_common = max(char_count.values())
     least_common = min(char_count.values())
@@ -45,27 +46,27 @@ def get_new(substr: str, data: dict[str, str]) -> tuple[str, str]:
 
 def poly_growth(polymer: str, data: dict[str, str], steps: int) -> dict[str, int]:
     # {pair of chars : count of that pair}
-    patterns: dict[str, int] = Counter()
+    patterns: Counter[str] = Counter()
 
     # propogate patterns with first iteration
     for idx, letter in enumerate(polymer[1:]):
-        substr = polymer[idx - 1] + letter
+        substr = polymer[idx] + letter
         new_substr = get_new(substr, data)
 
         patterns[new_substr[0]] += 1
         patterns[new_substr[1]] += 1
 
     # continually get more pairs
-    for _ in range(steps - 1):
-        iter_pairs: dict[str, int] = Counter()
+    for _ in range(steps):
+        iter_pairs: Counter[str] = Counter()
 
-        for pair in patterns:
+        for pair, count in patterns.items():
             new_substr = get_new(pair, data)
 
-            iter_pairs[new_substr[0]] += 1
-            iter_pairs[new_substr[1]] += 1
+            iter_pairs[new_substr[0]] += count
+            iter_pairs[new_substr[1]] += count
 
-        patterns = patterns + iter_pairs  # type: ignore
+        patterns = iter_pairs
 
     return patterns
 
