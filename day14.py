@@ -27,13 +27,8 @@ def get_score(poly: dict[str, int], final_char: str) -> int:
         char_count[i[0]] += poly[i]
 
     char_count[final_char] += 1
-    print(char_count)
 
-    most_common = max(char_count.values())
-    least_common = min(char_count.values())
-    score = most_common - least_common
-
-    return score
+    return max(char_count.values()) - min(char_count.values())
 
 
 def get_new(substr: str, data: dict[str, str]) -> tuple[str, str]:
@@ -67,11 +62,13 @@ def poly_growth(polymer: str, data: dict[str, str], steps: int) -> dict[str, int
             iter_pairs[new_substr[1]] += count
 
         patterns = iter_pairs
+        print(iter_pairs)
 
     return patterns
 
 
 # Part 1
+# Part 2
 def form_polymers(rawData: str, steps: int) -> int:
     polymer, data = parse_input(rawData)
     poly = poly_growth(polymer, data, steps)
@@ -142,16 +139,3 @@ def test_form_polymers(input_data, steps, expected):
 # NBCCNBBBCBHCB
 # NBBBCNCCNBBNBNBBCHBHHBCHB
 # NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB
-
-
-# Part 2 test
-"""
-@pytest.mark.parametrize(
-    ("input_data", "expected"),
-    [
-        (test_data, 0),
-    ]
-)
-def test_f(input_data: list[int], expected: int) -> None:
-    assert f(input_data) == expected
-"""
