@@ -90,9 +90,9 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = form_polymers(rawData, 40)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
