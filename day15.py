@@ -1,4 +1,5 @@
-# Part 1: What is the lowest total risk of any path from the top left to the bottom right?
+# Part 1: What is the lowest total risk of any path from the top left to the
+# bottom right?
 import pprint as p
 from collections import Counter
 from collections import defaultdict
@@ -7,19 +8,19 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def parse_input(raw_data:str) -> dict[tuple[int, int], int]:
+def parse_input(raw_data: str) -> dict[tuple[int, int], int]:
     data = {}
     lines = raw_data.splitlines()
-    
+
     for idx, line in enumerate(lines):
         for idy, char in enumerate(line):
             data[(idx, idy)] = int(char)
-    
+
     return data
 
 
 # Part 1
-def shortest_route(raw_data:str) -> int:
+def shortest_route(raw_data: str) -> int:
     data = parse_input(raw_data)
     print(data)
     return 0
