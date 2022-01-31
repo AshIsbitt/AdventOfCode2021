@@ -1,4 +1,4 @@
-# What to do
+# Part 1: What is the lowest total risk of any path from the top left to the bottom right?
 import pprint as p
 from collections import Counter
 from collections import defaultdict
