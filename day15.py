@@ -3,26 +3,46 @@
 import pprint as p
 from collections import Counter
 from collections import defaultdict
+from dataclasses import dataclass
 
 import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def parse_input(raw_data: str) -> dict[tuple[int, int], int]:
-    data = {}
+class Node:
+    def __init__(self, x, y, value):
+        self.x_cord = x
+        self.y_cord = y
+        self.value = value
+
+        if x_cord == 0 and y_cord == 0:
+            tentative_dist = 0
+        else:
+            tentative_dist = 2147483646  # size of python int - 1? "Infinity"
+
+
+def parse_input(raw_data: str) -> list[Node]:
+    data = []
     lines = raw_data.splitlines()
 
     for idx, line in enumerate(lines):
         for idy, char in enumerate(line):
-            data[(idx, idy)] = int(char)
+            data.append(Node(idx, idy, int(char)))
 
     return data
+
+
+def dijkstra(graph: list[Node], source: str) -> None:
+    pass
 
 
 # Part 1
 def shortest_route(raw_data: str) -> int:
     data = parse_input(raw_data)
-    print(data)
+    initial_node = data[0]
+    print(initial_node)
+    # val = dijkstra(data)
+
     return 0
 
 
