@@ -7,16 +7,34 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
+def parse_input(raw_data:str) -> dict[tuple[int, int], int]:
+    data = {}
+    lines = raw_data.splitlines()
+    
+    for idx, line in enumerate(lines):
+        for idy, char in enumerate(line):
+            data[(idx, idy)] = int(char)
+    
+    return data
+
+
+# Part 1
+def shortest_route(raw_data:str) -> int:
+    data = parse_input(raw_data)
+    print(data)
+    return 0
+
+
 def main(filename: str) -> int:
     with open(filename) as inputData:
-        rawData = inputData.read()
+        raw_data = inputData.read()
 
     if "sri" in filename:
         print("Browser: Safari")
     elif "ff" in filename:
         print("Browser: Firefox")
 
-    p1 = 0
+    p1 = shortest_route(raw_data)
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
@@ -52,8 +70,8 @@ test_data = """1163751742
         (test_data, 40),
     ],
 )
-def test_f(input_data, expected):
-    assert f(input_data) == expected
+def test_shortest_route(input_data, expected):
+    assert shortest_route(input_data) == expected
 
 
 # Part 2 test
