@@ -3,7 +3,6 @@
 import pprint as p
 from collections import Counter
 from collections import defaultdict
-from dataclasses import dataclass
 
 import pyperclip as pyp  # type: ignore
 import pytest
