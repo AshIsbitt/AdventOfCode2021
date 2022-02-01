@@ -12,7 +12,9 @@ class Node:
     def __init__(self, x, y, risk):
         self.coords = (x, y)
         self.risk = risk  # risk value for current node, given by input
+
         self.min_path = 0  # calculated min path weight from start node to here
+        self.is_visited = False
 
 
 def parse_input(raw_data: str) -> tuple[list[Node], int]:
@@ -27,7 +29,27 @@ def parse_input(raw_data: str) -> tuple[list[Node], int]:
     return data, line_len
 
 
+def neighbors(x: int, y: int) -> int:
+    yield (x, y + 1)
+    yield (x + 1, y)
+
+
 def dijkstra(graph: list[Node], source: Node, end_point: Node) -> int:
+    distance = 0
+
+    for node in graph:
+        if node.is_visited:
+            continue
+
+        for nearby in neighbors:
+            adj, _ = [n for n in graph if n.coords == nearby]
+
+            dist = adj.risk + (node.min_path if node != source else 0)
+            if adj.min_path >= dist:
+                adj.min_path == dist
+
+        node.is_visited = True
+
     return 0
 
 
