@@ -15,26 +15,31 @@ class Node:
         self.min_path = 0  # calculated min path weight from start node to here
 
 
-def parse_input(raw_data: str) -> list[Node]:
+def parse_input(raw_data: str) -> tuple[list[Node], int]:
     data = []
     lines = raw_data.splitlines()
+    line_len = len(lines[0])
 
     for idx, line in enumerate(lines):
         for idy, char in enumerate(line):
             data.append(Node(idx, idy, int(char)))
 
-    return data
+    return data, line_len
 
 
-def dijkstra(graph: list[Node], source: Node, end_point: Node) -> None:
-    pass
+def dijkstra(graph: list[Node], source: Node, end_point: Node) -> int:
+    return 0
 
 
 # Part 1
 def shortest_route(raw_data: str) -> int:
-    data = parse_input(raw_data)
-    print(data)
-    # val = dijkstra(data)
+    data, line_len = parse_input(raw_data)
+
+    src, _ = [node for node in data if node.coords == (0, 0)]
+    dest, _ = [node for node in data if node.coords == (line_len, line_len)]
+
+    val = dijkstra(data, src, dest)
+    print(val)
 
     return 0
 
