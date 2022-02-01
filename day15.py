@@ -9,15 +9,10 @@ import pytest
 
 
 class Node:
-    def __init__(self, x, y, value):
-        self.x_cord = x
-        self.y_cord = y
-        self.value = value
-
-        if x_cord == 0 and y_cord == 0:
-            tentative_dist = 0
-        else:
-            tentative_dist = 2147483646  # size of python int - 1? "Infinity"
+    def __init__(self, x, y, risk):
+        self.coords = (x, y)
+        self.risk = risk  # risk value for current node, given by input
+        self.min_path = 0  # calculated min path weight from start node to here
 
 
 def parse_input(raw_data: str) -> list[Node]:
@@ -31,15 +26,14 @@ def parse_input(raw_data: str) -> list[Node]:
     return data
 
 
-def dijkstra(graph: list[Node], source: str) -> None:
+def dijkstra(graph: list[Node], source: Node, end_point: Node) -> None:
     pass
 
 
 # Part 1
 def shortest_route(raw_data: str) -> int:
     data = parse_input(raw_data)
-    initial_node = data[0]
-    print(initial_node)
+    print(data)
     # val = dijkstra(data)
 
     return 0
