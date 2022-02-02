@@ -7,61 +7,20 @@ from collections import defaultdict
 import pyperclip as pyp  # type: ignore
 import pytest
 
-
-class Node:
-    def __init__(self, x, y, risk):
-        self.coords = (x, y)
-        self.risk = risk  # risk value for current node, given by input
-
-        self.min_path = 0  # calculated min path weight from start node to here
-        self.is_visited = False
+from algorithms.dijkstra import *  # type: ignore
 
 
-def parse_input(raw_data: str) -> tuple[list[Node], int]:
-    data = []
-    lines = raw_data.splitlines()
-    line_len = len(lines[0])
-
-    for idx, line in enumerate(lines):
-        for idy, char in enumerate(line):
-            data.append(Node(idx, idy, int(char)))
-
+def parse_input(raw_data: str) -> tuple[list[list[int]], int]:
+    line_len = len(raw_data.splitlines()[0])
+    data = [[int(char) for char in line] for line in raw_data.splitlines()]
     return data, line_len
-
-
-def neighbors(x: int, y: int) -> int:
-    yield (x, y + 1)
-    yield (x + 1, y)
-
-
-def dijkstra(graph: list[Node], source: Node, end_point: Node) -> int:
-    distance = 0
-
-    for node in graph:
-        if node.is_visited:
-            continue
-
-        for nearby in neighbors:
-            adj, _ = [n for n in graph if n.coords == nearby]
-
-            dist = adj.risk + (node.min_path if node != source else 0)
-            if adj.min_path >= dist:
-                adj.min_path == dist
-
-        node.is_visited = True
-
-    return 0
 
 
 # Part 1
 def shortest_route(raw_data: str) -> int:
     data, line_len = parse_input(raw_data)
-
-    src, _ = [node for node in data if node.coords == (0, 0)]
-    dest, _ = [node for node in data if node.coords == (line_len, line_len)]
-
-    val = dijkstra(data, src, dest)
-    print(val)
+    print(data)
+    print(line_len)
 
     return 0
 
