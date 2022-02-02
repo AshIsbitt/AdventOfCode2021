@@ -1,28 +1,66 @@
 # Part 1: What is the lowest total risk of any path from the top left to the
 # bottom right?
+import heapq
 import pprint as p
 from collections import Counter
 from collections import defaultdict
+from typing import Generator
 
 import pyperclip as pyp  # type: ignore
 import pytest
 
-from algorithms.dijkstra import *  # type: ignore
 
-
-def parse_input(raw_data: str) -> tuple[list[list[int]], int]:
+def parse_input(raw_data: str) -> tuple[dict[tuple[int, int], int], int]:
     line_len = len(raw_data.splitlines()[0])
-    data = [[int(char) for char in line] for line in raw_data.splitlines()]
+    data = {}
+
+    for idx, line in enumerate(raw_data.splitlines()):
+        for idy, char in enumerate(line):
+            data[(idx, idy)] = int(char)
+
     return data, line_len
+
+
+def neighbors(x: int, y: int) -> Generator[tuple[int, int], None, None]:
+    yield (x + 1, y)
+    yield (x - 1, y)
+    yield (x, y + 1)
+    yield (x, y - 1)
+
+
+def dijkstra(graph, src: tuple[int, int], dest: tuple[int, int]) -> int:
+    # Graph = (x, y): risk
+
+    # Adding to what's been seen, not tracking what's yet to be visited
+    visited_set: set[tuple[int, int]] = set()
+
+    # priority queue: (risk, (x, y))
+    cell_queue = [(0, (0, 0))]
+
+    while cell_queue:
+        # get first value in priority queue
+        current_risk, current_cords = heapq.heappop(cell_queue)
+
+        if current_cords in visited_set:
+            continue
+        elif current_cords == dest:
+            break
+        else:
+            visited_set.add(current_cords)
+
+        x, y = current_cords
+        for adj in neighbors(x, y):
+            if adj in graph:
+                heapq.heappush(cell_queue, (current_risk + graph[adj], adj))
+
+    return current_risk
 
 
 # Part 1
 def shortest_route(raw_data: str) -> int:
     data, line_len = parse_input(raw_data)
-    print(data)
-    print(line_len)
-
-    return 0
+    shortest_risk_lvl = dijkstra(data, (0, 0), (line_len, line_len))
+    return shortest_risk_lvl
 
 
 def main(filename: str) -> int:
