@@ -59,7 +59,7 @@ def dijkstra(graph, src: tuple[int, int], dest: tuple[int, int]) -> int:
 # Part 1
 def shortest_route(raw_data: str) -> int:
     data, line_len = parse_input(raw_data)
-    shortest_risk_lvl = dijkstra(data, (0, 0), (line_len, line_len))
+    shortest_risk_lvl = dijkstra(data, (0, 0), (line_len - 1, line_len - 1))
     return shortest_risk_lvl
 
 
@@ -84,8 +84,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day15.txt"))
-    raise SystemExit(main("input_sri/day15.txt"))
+    raise SystemExit(main("input_ff/day15.txt"))
+    # raise SystemExit(main("input_sri/day15.txt"))
 
 
 # Tests
