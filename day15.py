@@ -1,5 +1,7 @@
 # Part 1: What is the lowest total risk of any path from the top left to the
 # bottom right?
+# Part 2: Using the full 5x5 map, what is the lowest total risk of any path
+# from the top left to the bottom right?
 import heapq
 import pprint as p
 from collections import Counter
@@ -28,7 +30,7 @@ def neighbors(x: int, y: int) -> Generator[tuple[int, int], None, None]:
     yield (x, y - 1)
 
 
-def dijkstra(graph, src: tuple[int, int], dest: tuple[int, int]) -> int:
+def dijkstra(graph, src: tuple[int, int], dest: tuple[int, int], p2: bool) -> int:
     # Graph = (x, y): risk
 
     # Adding to what's been seen, not tracking what's yet to be visited
@@ -57,9 +59,10 @@ def dijkstra(graph, src: tuple[int, int], dest: tuple[int, int]) -> int:
 
 
 # Part 1
-def shortest_route(raw_data: str) -> int:
+# Part 2
+def shortest_route(raw_data: str, p2: bool) -> int:
     data, line_len = parse_input(raw_data)
-    shortest_risk_lvl = dijkstra(data, (0, 0), (line_len - 1, line_len - 1))
+    shortest_risk_lvl = dijkstra(data, (0, 0), (line_len - 1, line_len - 1), p2)
     return shortest_risk_lvl
 
 
@@ -72,13 +75,13 @@ def main(filename: str) -> int:
     elif "ff" in filename:
         print("Browser: Firefox")
 
-    p1 = shortest_route(raw_data)
+    p1 = shortest_route(raw_data, False)
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = shortest_route(raw_data, True)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
@@ -103,23 +106,11 @@ test_data = """1163751742
 
 # Part 1 test
 @pytest.mark.parametrize(
-    ("input_data", "expected"),
+    ("input_data", "p2_toggle", "expected"),
     [
-        (test_data, 40),
+        (test_data, False, 40),
+        (test_data, True, 315),
     ],
 )
-def test_shortest_route(input_data, expected):
-    assert shortest_route(input_data) == expected
-
-
-# Part 2 test
-"""
-@pytest.mark.parametrize(
-    ("input_data", "expected"),
-    [
-        (test_data, 0),
-    ]
-)
-def test_f(input_data, expected):
-    assert f(input_data) == expected
-"""
+def test_shortest_route(input_data, p2_toggle, expected):
+    assert shortest_route(input_data, p2_toggle) == expected
