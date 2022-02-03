@@ -23,6 +23,31 @@ def parse_input(raw_data: str) -> tuple[dict[tuple[int, int], int], int]:
     return data, line_len
 
 
+def value_reducer(val: int) -> int:
+    while val > 9:
+        val -= 9
+
+    return val
+
+
+def super_grid(
+    data: dict[tuple[int, int], int], short_len: int
+) -> dict[tuple[int, int], int]:
+    super_data = {}
+
+    for col in range(5):
+        for row in range(5):
+            for k, v in data.items():
+                x, y = k
+                x += short_len * col
+                y += short_len * row
+                v = value_reducer(v + col + row)
+
+                super_data[(x, y)] = v
+
+    return super_data
+
+
 def neighbors(x: int, y: int) -> Generator[tuple[int, int], None, None]:
     yield (x + 1, y)
     yield (x - 1, y)
@@ -30,14 +55,13 @@ def neighbors(x: int, y: int) -> Generator[tuple[int, int], None, None]:
     yield (x, y - 1)
 
 
-def dijkstra(graph, src: tuple[int, int], dest: tuple[int, int], p2: bool) -> int:
+def dijkstra(graph, src: tuple[int, int], dest: tuple[int, int]) -> int:
     # Graph = (x, y): risk
 
     # Adding to what's been seen, not tracking what's yet to be visited
     visited_set: set[tuple[int, int]] = set()
 
-    # priority queue: (risk, (x, y))
-    cell_queue = [(0, (0, 0))]
+    cell_queue = [(0, (0, 0))]  # priority queue: (risk, (x, y))
 
     while cell_queue:
         # get first value in priority queue
@@ -62,7 +86,12 @@ def dijkstra(graph, src: tuple[int, int], dest: tuple[int, int], p2: bool) -> in
 # Part 2
 def shortest_route(raw_data: str, p2: bool) -> int:
     data, line_len = parse_input(raw_data)
-    shortest_risk_lvl = dijkstra(data, (0, 0), (line_len - 1, line_len - 1), p2)
+
+    if p2:
+        data = super_grid(data, line_len)
+        line_len = line_len * 5
+
+    shortest_risk_lvl = dijkstra(data, (0, 0), (line_len - 1, line_len - 1))
     return shortest_risk_lvl
 
 
@@ -87,8 +116,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day15.txt"))
-    # raise SystemExit(main("input_sri/day15.txt"))
+    # raise SystemExit(main("input_ff/day15.txt"))
+    raise SystemExit(main("input_sri/day15.txt"))
 
 
 # Tests
