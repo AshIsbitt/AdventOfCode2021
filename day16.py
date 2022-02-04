@@ -45,30 +45,60 @@ def get_header(msg: str) -> tuple[int, int]:
     return int(version[0]), int(type_id[0])
 
 
+def get_length_type(msg: str) -> tuple[int, str]:
+    return int(msg[0]), msg[1:]
+
+
+def bin_to_den(msg: str) -> int:
+    return int(msg, 2)
+
+
 # Part 1
 def packet_decoder(data: str) -> int:
+    version_total = 0
+
     binary_string = hex_to_bin(data)
 
-    # get header
-    # if type is 4
-    # add every chunk of 5 to a list until chunk[0] == 0
-    # drop the leading number on each chunk
-    # make one binary string
-    # convert that to a number
-    # any other type
-    # get next bit (length type ID)
-    # if 0
-    # get next 15 bits
-    # convert to denary
-    # this is the total length in bits of the sub-packet
-    # if 1
-    # get next 11 bits
-    # convert to denary
-    # this is the quantity of sub-packets
-    # add up all version numbers
+    """
+    get header
+        if type is 4
+            add every chunk of 5 to a list until chunk[0] == 0
+            drop the leading number on each chunk
+            make one binary string
+            convert that to a number
+            any other type
+            get next bit (length type ID)
+                if 0
+                    get next 15 bits
+                    convert to denary
+                    this is the total length in bits of the sub-packet
+                if 1
+                    get next 11 bits
+                    convert to denary
+                    this is the quantity of sub-packets
+
+    add up all version numbers
+    """
+
     header = get_header(binary_string)
-    print(header)
-    return 0
+    binary_string = binary_string[7:]
+    version_total += header[0]
+
+    while binary_string:
+        if header[1] == 4:
+            packet_value = bin_to_den(binary_string)
+        else:
+            # operator packets
+            length_type, binary_string = get_length_type(binary_string)
+
+            if length_type:
+                num_of_sub_packets = bin_to_den(binary_string[:12])
+                binary_string = binary_string[12]
+            else:
+                sub_packet_len = bin_to_den(binary_string[:16])
+                binary_string = binary_string[16]
+
+    return version_total
 
 
 def main(filename: str) -> int:
