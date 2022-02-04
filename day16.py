@@ -33,16 +33,23 @@ def hex_to_bin(msg: str) -> str:
     for char in msg.strip():
         new_msg += TRANSLATION_TABLE[char]
 
-    while new_msg[-1] == "0":
-        new_msg = new_msg[:-1]
+    # while new_msg[-1] == "0":
+    #    new_msg = new_msg[:-1]
 
     return new_msg
+
+
+def get_header(msg: str) -> tuple[int, int]:
+    version = [k for k, v in TRANSLATION_TABLE.items() if v == f"0{msg[:3]}"]
+    type_id = [k for k, v in TRANSLATION_TABLE.items() if v == f"0{msg[4:7]}"]
+    return int(version[0]), int(type_id[0])
 
 
 # Part 1
 def packet_decoder(data: str) -> int:
     binary_string = hex_to_bin(data)
-    print(binary_string)
+    header = get_header(binary_string)
+    print(header)
     return 0
 
 
@@ -84,6 +91,20 @@ if __name__ == "__main__":
 )
 def test_packet_decoder(input_data, expected):
     assert packet_decoder(input_data) == expected
+
+
+bin_test_data_2 = "00111000000000000110111101000101001010010001001000000000"
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        ("D2FE28", "110100101111111000101000"),
+        ("38006F45291200", bin_test_data_2),
+    ],
+)
+def test_hex_to_bin(input_data, expected):
+    assert hex_to_bin(input_data) == expected
 
 
 # Part 2 test
