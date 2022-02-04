@@ -33,9 +33,6 @@ def hex_to_bin(msg: str) -> str:
     for char in msg.strip():
         new_msg += TRANSLATION_TABLE[char]
 
-    # while new_msg[-1] == "0":
-    #    new_msg = new_msg[:-1]
-
     return new_msg
 
 
@@ -45,8 +42,8 @@ def get_header(msg: str) -> tuple[int, int]:
     return int(version[0]), int(type_id[0])
 
 
-def get_length_type(msg: str) -> tuple[int, str]:
-    return int(msg[0]), msg[1:]
+def get_length_id(msg: str) -> int:
+    return int(msg[0])
 
 
 def bin_to_den(msg: str) -> int:
@@ -54,49 +51,31 @@ def bin_to_den(msg: str) -> int:
 
 
 # Part 1
-def packet_decoder(data: str) -> int:
+def packet_decoder(msg: str) -> int:
     version_total = 0
 
-    binary_string = hex_to_bin(data)
+    if set(msg) in [("0", "1"), ("1", "0")]:
+        binary_string = msg
+    else:
+        binary_string = hex_to_bin(msg)
 
-    """
-    get header
-        if type is 4
-            add every chunk of 5 to a list until chunk[0] == 0
-            drop the leading number on each chunk
-            make one binary string
-            convert that to a number
-            any other type
-            get next bit (length type ID)
-                if 0
-                    get next 15 bits
-                    convert to denary
-                    this is the total length in bits of the sub-packet
-                if 1
-                    get next 11 bits
-                    convert to denary
-                    this is the quantity of sub-packets
-
-    add up all version numbers
-    """
-
-    header = get_header(binary_string)
+    version, type_id = get_header(binary_string)
     binary_string = binary_string[7:]
-    version_total += header[0]
+    version_total += version
 
-    while binary_string:
-        if header[1] == 4:
-            packet_value = bin_to_den(binary_string)
-        else:
-            # operator packets
-            length_type, binary_string = get_length_type(binary_string)
+    if type_id == 4:
+        pass
+    else:
+        length_type_id = get_length_id(binary_string)
+        binary_string = binary_string[1:]
+        print(length_type_id)
 
-            if length_type:
-                num_of_sub_packets = bin_to_den(binary_string[:12])
-                binary_string = binary_string[12]
-            else:
-                sub_packet_len = bin_to_den(binary_string[:16])
-                binary_string = binary_string[16]
+        # if length_type_id:
+        #   version = parse_binary_by_packet_length(binary_string)
+        #   version_total += version
+        # else:
+        #    version = parse_binary_by_bit_length(binary_string)
+        #    version_total += version
 
     return version_total
 
