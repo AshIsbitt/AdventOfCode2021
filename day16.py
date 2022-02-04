@@ -48,6 +48,24 @@ def get_header(msg: str) -> tuple[int, int]:
 # Part 1
 def packet_decoder(data: str) -> int:
     binary_string = hex_to_bin(data)
+
+    # get header
+    # if type is 4
+    # add every chunk of 5 to a list until chunk[0] == 0
+    # drop the leading number on each chunk
+    # make one binary string
+    # convert that to a number
+    # any other type
+    # get next bit (length type ID)
+    # if 0
+    # get next 15 bits
+    # convert to denary
+    # this is the total length in bits of the sub-packet
+    # if 1
+    # get next 11 bits
+    # convert to denary
+    # this is the quantity of sub-packets
+    # add up all version numbers
     header = get_header(binary_string)
     print(header)
     return 0
