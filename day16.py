@@ -46,43 +46,6 @@ def get_length_id(msg: str) -> int:
     return int(msg[0])
 
 
-def parse_binary_by_packet_count(msg: str) -> int:
-    version_num = 0
-    packet_count = int(msg[:12], 2)
-    msg = msg[12:]
-
-    packets = []
-
-    while msg[-1] == "0":
-        msg = msg[:-1]
-
-    packet_len = len(msg) // packet_count
-    while len(msg) >= packet_len:
-        packets.append(msg[0:packet_len])
-        msg = msg[packet_len:]
-
-    for packet in packets:
-        version_num += packet_decoder(packet)
-
-    return version_num
-
-
-def parse_binary_by_bit_length(msg: str) -> int:
-    version_num = 0
-
-    packet_len = int(msg[:15], 2)
-    packets = []
-
-    while len(msg) >= packet_len:
-        packets.append(msg[0:packet_len])
-        msg = msg[packet_len:]
-
-    for packet in packets:
-        version_num += packet_decoder(packet)
-
-    return version_num
-
-
 def bin_to_den(msg: str) -> int:
     return int(msg, 2)
 
@@ -100,19 +63,35 @@ def packet_decoder(msg: str) -> int:
     binary_string = binary_string[7:]
     version_total += version
 
-    if type_id == 4:
-        pass
-    else:
+    if not type_id == 4:
         length_type_id = get_length_id(binary_string)
         binary_string = binary_string[1:]
-        print(length_type_id)
 
+        # check length data
         if length_type_id:
-            version = parse_binary_by_packet_count(binary_string)
-            version_total += version
+            packet_count = int(binary_string[:12])
+            binary_string = binary_string[12:]
+
+            # remove trailing zeros
+            while binary_string[-1] == "0":
+                binary_string = binary_string[:-1]
+
+            # split string into equal length packets
+            packets = [
+                binary_string[start : start + packet_count]
+                for start in range(0, len(binary_string), packet_count)
+            ]
+
+            for packet in packets:
+                version_total = packet_decoder(packet)
+
         else:
-            version = parse_binary_by_bit_length(binary_string)
-            version_total += version
+            bit_length = int(binary_string[:15])
+            binary_string = binary_string[15:]
+
+            while len(binary_string) >= bit_length:
+                version_total += packet_decoder(binary_string[0:bit_length])
+                binary_string[bit_length:]
 
     return version_total
 
