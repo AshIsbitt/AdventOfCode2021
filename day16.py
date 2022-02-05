@@ -91,7 +91,7 @@ def packet_decoder(msg: str) -> int:
 
             while len(binary_string) >= bit_length:
                 version_total += packet_decoder(binary_string[0:bit_length])
-                binary_string[bit_length:]
+                binary_string = binary_string[bit_length:]
 
     return version_total
 
