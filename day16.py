@@ -51,8 +51,7 @@ def bin_to_den(msg: str) -> int:
 
 
 # Part 1
-def packet_decoder(msg: str) -> int:
-    version_total = 0
+def packet_decoder(msg: str, version_total: int = 0) -> int:
 
     if set(msg) in [("0", "1"), ("1", "0")]:
         binary_string = msg
@@ -83,14 +82,16 @@ def packet_decoder(msg: str) -> int:
             ]
 
             for packet in packets:
-                version_total = packet_decoder(packet)
+                version_total = packet_decoder(packet, version_total)
 
         else:
             bit_length = int(binary_string[:15])
             binary_string = binary_string[15:]
 
             while len(binary_string) >= bit_length:
-                version_total += packet_decoder(binary_string[0:bit_length])
+                version_total += packet_decoder(
+                    binary_string[0:bit_length], version_total
+                )
                 binary_string = binary_string[bit_length:]
 
     return version_total
@@ -133,7 +134,7 @@ if __name__ == "__main__":
     ],
 )
 def test_packet_decoder(input_data, expected):
-    assert packet_decoder(input_data) == expected
+    assert packet_decoder(input_data, 0) == expected
 
 
 bin_test_data_2 = "00111000000000000110111101000101001010010001001000000000"
