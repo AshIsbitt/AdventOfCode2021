@@ -36,8 +36,8 @@ TRANSLATION_TABLE = {
 class Packet:
     version: int
     type_id: int
+    mode: int
     sub_packets: Union[list[Packet], list[str]]
-    mode: int = -1
 
 
 def hex_to_bin(msg: str) -> str:
@@ -78,7 +78,7 @@ def parse_packet(bin_str: str, ptr: int) -> list[Packet]:
             if not int(nibble[0]):
                 break
 
-        return [Packet(version=version, type_id=type_id, sub_packets=packets)]
+        return [Packet(version, type_id, -1, packets)]
 
     else:
         # get operator
