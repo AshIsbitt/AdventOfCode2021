@@ -86,11 +86,15 @@ def parse_packet(bin_str: str, ptr: int) -> list[Packet]:
         ptr += 1
 
         if mode:
+            packet_count = int(bin_str[ptr : ptr + 15])
+            ptr += 15
+            print(packet_count)
             ...
         else:
+            packet_length = int(bin_str[ptr : ptr + 11])
+            ptr += 11
+            print(packet_length)
             ...
-
-        pass
 
     return []
 
