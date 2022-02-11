@@ -120,14 +120,14 @@ def packet_decoder(msg: str, version_total: int = 0) -> int:
     binary_string = hex_to_bin(msg)
     _, packet_stack = parse_packet(0, binary_string)
 
-    packet_heap = [packet_stack]
+    packet_heap: list[Packet] = [packet_stack]
 
     while packet_heap:
         pkt = packet_heap.pop()
         version_total += pkt.version
 
         if pkt.mode != -1:
-            packet_heap.extend(pkt.sub_packets)
+            packet_heap.extend(pkt.sub_packets)  # type: ignore
 
     return version_total
 
