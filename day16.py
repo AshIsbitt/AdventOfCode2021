@@ -137,9 +137,16 @@ def packet_decoder(msg: str, version_total: int = 0) -> int:
     return get_version_total(packet_stack)
 
 
+def eval_packet(packets: Packet) -> int:
+    pass
+
+
 # Part 2
 def calculate_packet_values(msg: str) -> int:
-    ...
+    binary_string = hex_to_bin(msg)
+    _, packet_stack = parse_packet(0, binary_string)
+
+    return eval_packet(packet_stack)
 
 
 def main(filename: str) -> int:
