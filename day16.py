@@ -1,5 +1,7 @@
 # Part 1: Decode the structure of your hexadecimal-encoded BITS transmission;
 # what do you get if you add up the version numbers in all packets?
+# Part 2: What do you get if you evaluate the expression represented by your
+# hexadecimal-encoded BITS transmission?
 from __future__ import annotations
 
 import pprint as p
@@ -113,13 +115,8 @@ def parse_packet(ptr: int, bin_str: str) -> tuple[int, Packet]:
             return ptr, Packet(version, type_id, mode, packet_list)
 
 
-# Part 1
-def packet_decoder(msg: str, version_total: int = 0) -> int:
+def get_version_total(packet_stack: Packet) -> int:
     version_total = 0
-
-    binary_string = hex_to_bin(msg)
-    _, packet_stack = parse_packet(0, binary_string)
-
     packet_heap: list[Packet] = [packet_stack]
 
     while packet_heap:
@@ -130,6 +127,19 @@ def packet_decoder(msg: str, version_total: int = 0) -> int:
             packet_heap.extend(pkt.sub_packets)  # type: ignore
 
     return version_total
+
+
+# Part 1
+def packet_decoder(msg: str, version_total: int = 0) -> int:
+    binary_string = hex_to_bin(msg)
+    _, packet_stack = parse_packet(0, binary_string)
+
+    return get_version_total(packet_stack)
+
+
+# Part 2
+def calculate_packet_values(msg: str) -> int:
+    ...
 
 
 def main(filename: str) -> int:
@@ -145,16 +155,16 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = calculate_packet_values(raw_data)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day16.txt"))
-    # raise SystemExit(main("input_sri/day16.txt"))
+    # raise SystemExit(main("input_ff/day16.txt"))
+    raise SystemExit(main("input_sri/day16.txt"))
 
 
 # Tests
@@ -186,14 +196,18 @@ def test_hex_to_bin(input_data, expected):
     assert hex_to_bin(input_data) == expected
 
 
-# Part 2 test
-"""
+# Part 2 tests
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
-        (test_data, 0),
-    ]
+        ("C200B40A82", 3),
+        ("04005AC33890", 54),
+        ("880086C3E88112", 7),
+        ("D8005AC2A8F0", 1),
+        ("F600BC2D8F", 0),
+        ("9C005AC2F8F0", 0),
+        ("9C0141080250320F1802104A08", 1),
+    ],
 )
-def test_f(input_data, expected):
-    assert f(input_data) == expected
-"""
+def test_calculate_packet_values(input_data, expected):
+    assert calculate_packet_values(input_data) == expected
