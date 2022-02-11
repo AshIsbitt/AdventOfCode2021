@@ -137,8 +137,29 @@ def packet_decoder(msg: str, version_total: int = 0) -> int:
     return get_version_total(packet_stack)
 
 
-def eval_packet(packets: Packet) -> int:
-    pass
+def eval_packet(pkt) -> int:
+    if pkt.type_id == 0:
+        return sum(eval_packet(sub_pkt) for sub_pkt in pkt.sub_packets)
+    elif pkt.type_id == 1:
+        val = 1
+        for sub_pkt in pkt.sub_packets:
+            val *= eval_packet(sub_pkt)
+        # val *= [eval_packet(sub_pkt) for sub_pkt in pkt.sub_packets]
+        return val
+    elif pkt.type_id == 2:
+        return min(eval_packet(sub_pkt) for sub_pkt in pkt.sub_packets)
+    elif pkt.type_id == 3:
+        return max(eval_packet(sub_pkt) for sub_pkt in pkt.sub_packets)
+    elif pkt.type_id == 4:
+        return bin_to_den("".join(pkt.sub_packets))
+    elif pkt.type_id == 5:
+        return eval_packet(pkt.sub_packets[0]) > eval_packet(pkt.sub_packets[1])
+    elif pkt.type_id == 6:
+        return eval_packet(pkt.sub_packets[0]) < eval_packet(pkt.sub_packets[1])
+    elif pkt.type_id == 7:
+        return eval_packet(pkt.sub_packets[0]) == eval_packet(pkt.sub_packets[1])
+    else:
+        raise AssertionError
 
 
 # Part 2
@@ -170,8 +191,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day16.txt"))
-    raise SystemExit(main("input_sri/day16.txt"))
+    raise SystemExit(main("input_ff/day16.txt"))
+    # raise SystemExit(main("input_sri/day16.txt"))
 
 
 # Tests
