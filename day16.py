@@ -86,23 +86,23 @@ def parse_packet(ptr: int, bin_str: str) -> tuple[int, Packet]:
         ptr += 1
 
         if mode:
-            packet_length = int(bin_str[ptr : ptr + 11])
+            packet_count = bin_to_den(bin_str[ptr : ptr + 11])
             ptr += 11
 
             packet_list: list[Packet] = []
 
-            for _ in range(packet_length):
+            for _ in range(packet_count):
                 ptr, packet = parse_packet(ptr, bin_str)
                 packet_list.append(packet)
 
             return ptr, Packet(version, type_id, mode, packet_list)
 
         else:
-            packet_count = int(bin_str[ptr : ptr + 15])
+            packet_length = bin_to_den(bin_str[ptr : ptr + 15])
             ptr += 15
 
             new_ptr = ptr
-            ptr += packet_count
+            ptr += packet_length
 
             packet_list = []
 
@@ -127,7 +127,7 @@ def packet_decoder(msg: str, version_total: int = 0) -> int:
         version_total += pkt.version
 
         if pkt.mode != -1:
-            packet_heap.expand(pkt.sub_packets)
+            packet_heap.extend(pkt.sub_packets)
 
     return version_total
 
@@ -153,8 +153,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day16.txt"))
-    raise SystemExit(main("input_sri/day16.txt"))
+    raise SystemExit(main("input_ff/day16.txt"))
+    # raise SystemExit(main("input_sri/day16.txt"))
 
 
 # Tests
