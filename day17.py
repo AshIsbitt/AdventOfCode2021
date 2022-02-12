@@ -35,15 +35,11 @@ if __name__ == "__main__":
 
 
 # Tests
-test_data = """
-"""
-
-
 # Part 1 test
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
-        (test_data, 0),
+        ("target area: x=20..30, y=-10..-5", 45),
     ],
 )
 def test_f(input_data, expected):
