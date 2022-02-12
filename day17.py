@@ -9,6 +9,20 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
+def parse_input(data: str) -> tuple[tuple[int, int], tuple[int, int]]:
+    x, y = (data.split(": "))[1].split(", ")
+    x_s, x_e = x.split("..")
+    y_s, y_e = y.split("..")
+    return ((int(x_s[2:]), int(x_e)), (int(y_s[2:]), int(y_e)))
+
+
+# Part 1
+def calc_trajectory(data: str) -> int:
+    targets = parse_input(data)
+    print(targets)
+    return 0
+
+
 def main(filename: str) -> int:
     with open(filename) as input_data:
         raw_data = input_data.read()
@@ -18,7 +32,7 @@ def main(filename: str) -> int:
     elif "ff" in filename:
         print("Browser: Firefox")
 
-    p1 = 0
+    p1 = calc_trajectory(raw_data)
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
@@ -42,8 +56,8 @@ if __name__ == "__main__":
         ("target area: x=20..30, y=-10..-5", 45),
     ],
 )
-def test_f(input_data, expected):
-    assert f(input_data) == expected
+def test_calc_trajectory(input_data, expected):
+    assert calc_trajectory(input_data) == expected
 
 
 # Part 2 test
