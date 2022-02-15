@@ -16,11 +16,37 @@ def parse_input(data: str) -> tuple[tuple[int, int], tuple[int, int]]:
     return ((int(x_s[2:]), int(x_e)), (int(y_s[2:]), int(y_e)))
 
 
+def check_trajectory(
+    x: int, y: int, targets: tuple[tuple[int, int], tuple[int, int]]
+) -> int:
+    ...
+
+
+def get_highest_value(valid: dict[tuple[int, int], int]) -> int:
+    ...
+
+
+def trajectory_iterator(targets: tuple[tuple[int, int], tuple[int, int]]) -> int:
+    valid: dict[tuple[int, int], int] = {}
+
+    for x in range(1, 10):
+        for y in range(1, 10):
+            # returns an int with it's highest y value or 0 if it's not within target area
+            highest_point = check_trajectory(x, y, targets)
+
+            if highest_point > 0:
+                valid[(x, y)] = highest_point
+
+    highest_val = get_highest_value(valid)
+    return highest_val
+
+
 # Part 1
 def calc_trajectory(data: str) -> int:
     targets = parse_input(data)
-    print(targets)
-    return 0
+    # generate each iterator up to(10,10) starting at (1,1)
+    highest_val = trajectory_iterator(targets)
+    return highest_val
 
 
 def main(filename: str) -> int:
