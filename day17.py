@@ -76,7 +76,6 @@ def trajectory_iterator(targets: tuple[tuple[int, int], tuple[int, int]]) -> int
 # Part 1
 def calc_trajectory(data: str) -> int:
     targets = parse_input(data)
-    # generate each iterator up to(10,10) starting at (1,1)
     highest_val = trajectory_iterator(targets)
     return highest_val
 
@@ -116,6 +115,16 @@ if __name__ == "__main__":
 )
 def test_calc_trajectory(input_data, expected):
     assert calc_trajectory(input_data) == expected
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        ({"a": 4, "b": 6, "c": 12, "d": 5}, "c"),
+    ],
+)
+def test_get_highest_value(input_data, expected):
+    assert get_highest_value(input_data) == expected
 
 
 # Part 2 test
