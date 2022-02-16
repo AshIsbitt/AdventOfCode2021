@@ -27,6 +27,7 @@ def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
     # current position starting at (0,0)
     x_pos = 0
     y_pos = 0
+
     # velocity
     x_vel = x
     y_vel = y
@@ -34,8 +35,13 @@ def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
     y_heights = []
 
     while True:
+        # if not abs(), OOM error, if abs(), incorrect values
         x_pos += x_vel
+        # x_pos += abs(x_vel)
         y_pos += y_vel
+        # y_pos += abs(y_vel)
+
+        print(x_pos, y_pos)
 
         if x_vel > 0:
             x_vel -= 1
@@ -45,16 +51,19 @@ def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
         y_vel -= 1
         y_heights.append(y_pos)
 
-        if x_pos > targets["x_end"] or y_pos > targets["y_end"]:
-            # Overshot
+        if x_pos <= targets["x_end"] and y_pos <= targets["y_end"]:
+            if x_pos > targets["x_start"] and y_pos > targets["y_start"]:
+                # successful launch
+                print("ret")
+                return max(y_heights)
+            else:
+                # not yet in range
+                print("cont")
+                continue
+        else:
+            # overshoot
+            print("break")
             break
-
-        elif x_pos in range(targets["x_start"], targets["x_end"]) and y_pos in range(
-            targets["y_start"], targets["y_end"]
-        ):
-
-            # successful launch
-            return max(y_heights)
 
     return 0
 
@@ -65,11 +74,13 @@ def get_highest_value(valid: dict[tuple[int, int], int]) -> tuple[int, int]:
 
 def trajectory_iterator(targets: dict[str, int]) -> int:
     valid: dict[tuple[int, int], int] = {}
+    print(targets)
 
-    RANGE_CHECK = 2500
+    RANGE_CHECK = 10
     for x in range(1, RANGE_CHECK):
         for y in range(-RANGE_CHECK, RANGE_CHECK):
             # returns an int with it's highest y value or 0 if it's not within target area
+            print(f"----{x} {y}-----")
             highest_point = check_trajectory(x, y, targets)
 
             if highest_point != 0:
