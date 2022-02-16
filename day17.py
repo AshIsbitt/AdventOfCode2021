@@ -24,38 +24,39 @@ def parse_input(inp: str) -> dict[str, int]:
 
 def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
 
+    # current position starting at (0,0)
     x_pos = 0
     y_pos = 0
-    highest_point = 0
-    success = False
+    # velocity
+    x_vel = x
+    y_vel = y
+
+    y_heights = []
 
     while True:
-        x_pos += x
-        y_pos += y
+        x_pos += x_vel
+        y_pos += y_vel
 
-        if x > 0:
-            x -= 1
-        elif x < 0:
-            x += 1
+        if x_vel > 0:
+            x_vel -= 1
+        elif x_vel < 0:
+            x_vel += 1
 
-        y -= 1
+        y_vel -= 1
+        y_heights.append(y_pos)
 
-        if y_pos < highest_point:
-            highest_point = y_pos
+        if x_pos > targets["x_end"] or y_pos > targets["y_end"]:
+            # Overshot
+            break
 
-        if x_pos in range(targets["x_start"], targets["x_end"]) and y_pos in range(
+        elif x_pos in range(targets["x_start"], targets["x_end"]) and y_pos in range(
             targets["y_start"], targets["y_end"]
         ):
 
-            success = True
-            break
-        elif x_pos > targets["x_end"] or y_pos > targets["y_end"]:
-            break
+            # successful launch
+            return max(y_heights)
 
-    if success:
-        return highest_point
-    else:
-        return 0
+    return 0
 
 
 def get_highest_value(valid: dict[tuple[int, int], int]) -> tuple[int, int]:
