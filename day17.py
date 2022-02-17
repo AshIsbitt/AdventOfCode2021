@@ -23,7 +23,6 @@ def parse_input(inp: str) -> dict[str, int]:
 
 
 def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
-
     # current position starting at (0,0)
     x_pos = 0
     y_pos = 0
@@ -32,16 +31,13 @@ def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
     x_vel = x
     y_vel = y
 
-    y_heights = []
+    complete = False
+    max_y = 0
 
-    while True:
-        # if not abs(), OOM error, if abs(), incorrect values
+    for i in range(1000):
         x_pos += x_vel
-        # x_pos += abs(x_vel)
         y_pos += y_vel
-        # y_pos += abs(y_vel)
-
-        print(x_pos, y_pos)
+        max_y = max(max_y, y_pos)
 
         if x_vel > 0:
             x_vel -= 1
@@ -49,45 +45,32 @@ def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
             x_vel += 1
 
         y_vel -= 1
-        y_heights.append(y_pos)
 
-        if x_pos <= targets["x_end"] and y_pos <= targets["y_end"]:
-            if x_pos > targets["x_start"] and y_pos > targets["y_start"]:
-                # successful launch
-                print("ret")
-                return max(y_heights)
-            else:
-                # not yet in range
-                print("cont")
-                continue
-        else:
-            # overshoot
-            print("break")
-            break
+        print(x_pos, y_pos)
+        if (
+            targets["x_start"] <= x_pos <= targets["x_end"]
+            and targets["y_start"] <= y_pos <= targets["y_end"]
+        ):
+            complete = True
+
+    if complete:
+        return max_y
 
     return 0
 
 
-def get_highest_value(valid: dict[tuple[int, int], int]) -> tuple[int, int]:
-    return max(valid, key=lambda key: valid[key])
-
-
 def trajectory_iterator(targets: dict[str, int]) -> int:
-    valid: dict[tuple[int, int], int] = {}
-    print(targets)
+    highest_peak = 0
 
-    RANGE_CHECK = 10
-    for x in range(1, RANGE_CHECK):
-        for y in range(-RANGE_CHECK, RANGE_CHECK):
+    for x in range(-500, 500):
+        for y in range(500):
+            print(f"---{x}, {y}--")
             # returns an int with it's highest y value or 0 if it's not within target area
-            print(f"----{x} {y}-----")
-            highest_point = check_trajectory(x, y, targets)
+            traj_check = check_trajectory(x, y, targets)
 
-            if highest_point != 0:
-                valid[(x, y)] = highest_point
+            highest_peak = max(highest_peak, traj_check)
 
-    highest_val = valid[get_highest_value(valid)]
-    return highest_val
+    return highest_peak
 
 
 # Part 1
@@ -132,16 +115,6 @@ if __name__ == "__main__":
 )
 def test_calc_trajectory(input_data, expected):
     assert calc_trajectory(input_data) == expected
-
-
-@pytest.mark.parametrize(
-    ("input_data", "expected"),
-    [
-        ({"a": 4, "b": 6, "c": 12, "d": 5}, "c"),
-    ],
-)
-def test_get_highest_value(input_data, expected):
-    assert get_highest_value(input_data) == expected
 
 
 # Part 2 test
