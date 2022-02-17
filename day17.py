@@ -23,6 +23,9 @@ def parse_input(inp: str) -> dict[str, int]:
 
 
 def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
+    complete = False
+    max_y = 0
+
     # current position starting at (0,0)
     x_pos = 0
     y_pos = 0
@@ -30,9 +33,6 @@ def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
     # velocity
     x_vel = x
     y_vel = y
-
-    complete = False
-    max_y = 0
 
     for i in range(1000):
         x_pos += x_vel
@@ -46,24 +46,29 @@ def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
 
         y_vel -= 1
 
-        print(x_pos, y_pos)
         if (
             targets["x_start"] <= x_pos <= targets["x_end"]
             and targets["y_start"] <= y_pos <= targets["y_end"]
         ):
             complete = True
 
+        # Probably don't need this anyway
+        elif x_pos > targets["x_end"] or y_pos > targets["y_end"]:
+            break
+
     if complete:
         return max_y
 
+    # for mypy
     return 0
 
 
 def trajectory_iterator(targets: dict[str, int]) -> int:
     highest_peak = 0
+    print(targets)
 
-    for x in range(-500, 500):
-        for y in range(500):
+    for x in range(500):
+        for y in range(-500, 250):
             print(f"---{x}, {y}--")
             # returns an int with it's highest y value or 0 if it's not within target area
             traj_check = check_trajectory(x, y, targets)
