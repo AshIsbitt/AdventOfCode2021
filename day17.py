@@ -1,8 +1,6 @@
 # Part 1: Find the initial velocity that causes the probe to reach the highest
 # y position and still eventually be within the target area after any step.
 # What is the highest y position it reaches on this trajectory?
-# Part 2: How many distinct initial velocity values cause the probe to be
-# within the target area after any step?
 import pprint as p
 from collections import Counter
 from collections import defaultdict
@@ -24,12 +22,12 @@ def parse_input(inp: str) -> dict[str, int]:
     return data
 
 
-def trajectory_iterator(targets: dict[str, int], p2: bool = False) -> int:
+def trajectory_iterator(targets: dict[str, int]) -> int:
     highest_peak = 0
-    trick_shot_count = 0
+    print(targets)
 
-    for x in range(2000):
-        for y in range(-1000, 1000):
+    for x in range(315):
+        for y in range(315):
             x_pos = 0
             y_pos = 0
             x_vel = x
@@ -37,7 +35,7 @@ def trajectory_iterator(targets: dict[str, int], p2: bool = False) -> int:
             max_height = 0
             complete = False
 
-            for _ in range(500):
+            for _ in range(330):
                 x_pos += x_vel
                 y_pos += y_vel
                 max_height = max(max_height, y_pos)
@@ -57,30 +55,16 @@ def trajectory_iterator(targets: dict[str, int], p2: bool = False) -> int:
                     complete = True
 
             if complete:
-                trick_shot_count += 1
-                print(x, y, trick_shot_count)
                 highest_peak = max(max_height, highest_peak)
-
-    if p2:
-        return trick_shot_count
 
     return highest_peak
 
 
 # Part 1
 def calc_trajectory(data: str) -> int:
-    return 0
     targets = parse_input(data)
     highest_val = trajectory_iterator(targets)
     return highest_val
-
-
-# Part 2
-def get_all_successful_trick_shots(data: str) -> int:
-    targets = parse_input(data)
-    # targets = parse_input("target area: x=20..30, y=-10..-5")
-    trick_shot_count = trajectory_iterator(targets, True)
-    return trick_shot_count
 
 
 def main(filename: str) -> int:
@@ -96,9 +80,9 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    p2 = get_all_successful_trick_shots(raw_data)
-    pyp.copy(p2)
-    print(f"Part 2: {p2}")
+    # p2 = 0
+    # pyp.copy(p2)
+    # print(f"Part 2: {p2}")
 
     return 0
 
@@ -121,11 +105,13 @@ def test_calc_trajectory(input_data, expected):
 
 
 # Part 2 test
+"""
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
-        ("target area: x=20..30, y=-10..-5", 112),
-    ],
+        (test_data, 0),
+    ]
 )
 def test_f(input_data, expected):
-    assert get_all_successful_trick_shots(input_data) == expected
+    assert f(input_data) == expected
+"""
