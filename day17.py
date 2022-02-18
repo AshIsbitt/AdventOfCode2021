@@ -1,6 +1,8 @@
 # Part 1: Find the initial velocity that causes the probe to reach the highest
 # y position and still eventually be within the target area after any step.
 # What is the highest y position it reaches on this trajectory?
+# Part 2: How many distinct initial velocity values cause the probe to be
+# within the target area after any step?
 import pprint as p
 from collections import Counter
 from collections import defaultdict
@@ -22,7 +24,7 @@ def parse_input(inp: str) -> dict[str, int]:
     return data
 
 
-def trajectory_iterator(targets: dict[str, int]) -> int:
+def trajectory_iterator(targets: dict[str, int], p2: bool = False) -> int:
     highest_peak = 0
     print(targets)
 
@@ -67,6 +69,13 @@ def calc_trajectory(data: str) -> int:
     return highest_val
 
 
+# Part 2
+def get_all_successful_trick_shots(data: str) -> int:
+    targets = parse_input(data)
+    trick_shot_count = trajectory_iterator(targets, True)
+    return trick_shot_count
+
+
 def main(filename: str) -> int:
     with open(filename) as input_data:
         raw_data = input_data.read()
@@ -80,9 +89,9 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = get_all_successful_trick_shots(raw_data)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
@@ -105,13 +114,11 @@ def test_calc_trajectory(input_data, expected):
 
 
 # Part 2 test
-"""
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
-        (test_data, 0),
-    ]
+        ("target area: x=20..30, y=-10..-5", 112),
+    ],
 )
 def test_f(input_data, expected):
-    assert f(input_data) == expected
-"""
+    assert get_all_successful_trick_shots(input_data) == expected
