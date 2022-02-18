@@ -22,58 +22,40 @@ def parse_input(inp: str) -> dict[str, int]:
     return data
 
 
-def check_trajectory(x: int, y: int, targets: dict[str, int]) -> int:
-    complete = False
-    max_y = 0
-
-    # current position starting at (0,0)
-    x_pos = 0
-    y_pos = 0
-
-    # velocity
-    x_vel = x
-    y_vel = y
-
-    for i in range(1000):
-        x_pos += x_vel
-        y_pos += y_vel
-        max_y = max(max_y, y_pos)
-
-        if x_vel > 0:
-            x_vel -= 1
-        elif x_vel < 0:
-            x_vel += 1
-
-        y_vel -= 1
-
-        if (
-            targets["x_start"] <= x_pos <= targets["x_end"]
-            and targets["y_start"] <= y_pos <= targets["y_end"]
-        ):
-            complete = True
-
-        # Probably don't need this anyway
-        elif x_pos > targets["x_end"] or y_pos > targets["y_end"]:
-            break
-
-    if complete:
-        return max_y
-
-    # for mypy
-    return 0
-
-
 def trajectory_iterator(targets: dict[str, int]) -> int:
     highest_peak = 0
     print(targets)
 
     for x in range(500):
-        for y in range(-500, 250):
-            print(f"---{x}, {y}--")
-            # returns an int with it's highest y value or 0 if it's not within target area
-            traj_check = check_trajectory(x, y, targets)
+        for y in range(500):
+            x_pos = 0
+            y_pos = 0
+            x_vel = x
+            y_vel = y
+            max_height = 0
+            complete = False
 
-            highest_peak = max(highest_peak, traj_check)
+            for _ in range(330):
+                x_pos += x_vel
+                y_pos += y_vel
+                max_height = max(max_height, y_pos)
+
+                if x_vel > 0:
+                    x_vel -= 1
+                elif x_vel < 0:
+                    x_vel += 1
+
+                y_vel -= 1
+
+                if (
+                    targets["x_start"] <= x_pos <= targets["x_end"]
+                    and targets["y_start"] <= y_pos <= targets["y_end"]
+                ):
+
+                    complete = True
+
+            if complete:
+                highest_peak = max(max_height, highest_peak)
 
     return highest_peak
 
