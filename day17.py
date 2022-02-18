@@ -22,12 +22,12 @@ def parse_input(inp: str) -> dict[str, int]:
     return data
 
 
-def trajectory_iterator(targets: dict[str, int]) -> int:
+def trajectory_iterator(targets: dict[str, int], p2: bool = False) -> int:
     highest_peak = 0
-    print(targets)
+    trickshots = 0
 
-    for x in range(315):
-        for y in range(315):
+    for x in range(targets["x_end"]):
+        for y in range(targets["y_start"], abs(targets["y_start"]) + 1):
             x_pos = 0
             y_pos = 0
             x_vel = x
@@ -52,10 +52,14 @@ def trajectory_iterator(targets: dict[str, int]) -> int:
                     and targets["y_start"] <= y_pos <= targets["y_end"]
                 ):
 
+                    trickshots += 1
                     complete = True
 
             if complete:
                 highest_peak = max(max_height, highest_peak)
+
+    if p2:
+        return trickshots - 1
 
     return highest_peak
 
@@ -63,8 +67,16 @@ def trajectory_iterator(targets: dict[str, int]) -> int:
 # Part 1
 def calc_trajectory(data: str) -> int:
     targets = parse_input(data)
+    print(targets)
     highest_val = trajectory_iterator(targets)
     return highest_val
+
+
+# Part 2
+def trickshot_counter(data: str) -> int:
+    targets = parse_input(data)
+    counter = trajectory_iterator(targets, True)
+    return counter
 
 
 def main(filename: str) -> int:
@@ -80,15 +92,15 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = trickshot_counter(raw_data)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
 
 if __name__ == "__main__":
-    # raise SystemExit(main("input_ff/day17.txt"))
+    raise SystemExit(main("input_ff/day17.txt"))
     raise SystemExit(main("input_sri/day17.txt"))
 
 
@@ -105,13 +117,11 @@ def test_calc_trajectory(input_data, expected):
 
 
 # Part 2 test
-"""
 @pytest.mark.parametrize(
     ("input_data", "expected"),
     [
-        (test_data, 0),
-    ]
+        ("target area: x=20..30, y=-10..-5", 112),
+    ],
 )
-def test_f(input_data, expected):
-    assert f(input_data) == expected
-"""
+def test_trickshot_counter(input_data, expected):
+    assert trickshot_counter(input_data) == expected
