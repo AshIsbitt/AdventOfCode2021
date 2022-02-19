@@ -59,7 +59,7 @@ def trajectory_iterator(targets: dict[str, int], p2: bool = False) -> int:
                 highest_peak = max(max_height, highest_peak)
 
     if p2:
-        return trickshots - 1
+        return trickshots
 
     return highest_peak
 
@@ -100,8 +100,8 @@ def main(filename: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("input_ff/day17.txt"))
     raise SystemExit(main("input_sri/day17.txt"))
+    raise SystemExit(main("input_ff/day17.txt"))
 
 
 # Tests
