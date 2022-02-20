@@ -10,6 +10,7 @@ import pytest
 
 
 def parse_input(inp: str) -> dict[str, int]:
+    # inp = "target area: x=20..30, y=-10..-5"
     x, y = (inp.split(": "))[1].split(", ")
     x_s, x_e = x.split("..")
     y_s, y_e = y.split("..")
@@ -26,7 +27,7 @@ def trajectory_iterator(targets: dict[str, int], p2: bool = False) -> int:
     highest_peak = 0
     trickshots = 0
 
-    for x in range(targets["x_end"]):
+    for x in range(targets["x_end"] + 3):
         for y in range(targets["y_start"], abs(targets["y_start"]) + 1):
             x_pos = 0
             y_pos = 0
@@ -52,10 +53,10 @@ def trajectory_iterator(targets: dict[str, int], p2: bool = False) -> int:
                     and targets["y_start"] <= y_pos <= targets["y_end"]
                 ):
 
-                    trickshots += 1
                     complete = True
 
             if complete:
+                trickshots += 1
                 highest_peak = max(max_height, highest_peak)
 
     if p2:
