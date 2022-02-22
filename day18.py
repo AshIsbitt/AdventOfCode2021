@@ -9,7 +9,10 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def get_magnitude(base) -> int:
+def get_magnitude(base: object) -> int:
+    """3x the left element plus 2x the right element"""
+    if isinstance(base, list):
+        return (3 * get_magnitude(base[0])) + (2 * get_magnitude(base[1]))
     return 0
 
 
@@ -21,13 +24,18 @@ def explode(base):
     return 0
 
 
-def add_numbers(base):
-    return 0
+def add_numbers(n1: object, n2: object) -> object:
+    """Turn two values into a 2-length list"""
+    return [n1, n2]
 
 
 # Part 1
 def number_homework(raw_data: list[object]) -> int:
-    return 0
+    start = raw_data[0]
+    for item in raw_data[1:]:
+        start = add_numbers(start, item)
+
+    return get_magnitude(start)
 
 
 def main(filename: str) -> int:
