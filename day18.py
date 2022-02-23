@@ -16,12 +16,14 @@ def get_magnitude(base: object) -> int:
     return 0
 
 
-def split(base):
-    return 0
+def split(base: object) -> tuple[bool, object]:
+    """Turn a single number greater than 9 into 2-len list"""
+    return False, 0
 
 
-def explode(base):
-    return 0
+def explode(base: object) -> tuple[bool, object]:
+    """Add a 2-len list's values to outer values and replace with 0"""
+    return False, 0
 
 
 def add_numbers(n1: object, n2: object) -> object:
@@ -29,11 +31,18 @@ def add_numbers(n1: object, n2: object) -> object:
     return [n1, n2]
 
 
-# Part 1
 def number_homework(raw_data: list[object]) -> int:
     start = raw_data[0]
     for item in raw_data[1:]:
         start = add_numbers(start, item)
+
+        exp = True
+        while exp:
+            exp, start = explode(start)
+
+        spl = True
+        while spl:
+            spl, start = split(start)
 
     return get_magnitude(start)
 
