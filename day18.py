@@ -4,20 +4,23 @@ import ast
 import pprint as p
 from collections import Counter
 from collections import defaultdict
+from typing import Union
 
 import pyperclip as pyp  # type: ignore
 import pytest
 
 
-def get_magnitude(base: object) -> int:
+def get_magnitude(base: object):
     """3x the left element plus 2x the right element"""
     if isinstance(base, list):
         return (3 * get_magnitude(base[0])) + (2 * get_magnitude(base[1]))
-    return 0
+    else:
+        return base
 
 
 def split(base: object) -> tuple[bool, object]:
     """Turn a single number greater than 9 into 2-len list"""
+
     return False, 0
 
 
