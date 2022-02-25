@@ -20,8 +20,15 @@ def get_magnitude(base: object):
 
 def split(base: object) -> tuple[bool, object]:
     """Turn a single number greater than 9 into 2-len list"""
+    if isinstance(base, list):
+        return False, split(base[0])
+    elif isinstance(base, int):
+        if base > 9:
+            return False, [base // 2, (base + 1) // 2]
+        else:
+            return True, base
 
-    return False, 0
+    return True, base
 
 
 def explode(base: object) -> tuple[bool, object]:
