@@ -9,10 +9,25 @@ import pyperclip as pyp  # type: ignore
 import pytest
 
 
+class Node:
+    def __init__():
+        pass
+
+
 # Part 1
 def calculate_homework(data: list[object]) -> int:
-    final_val = 0
-    return final_val
+    # Turn numbers into nodes on a bintree
+    tree = []
+    for num in data:
+        tree.append(Node(num))
+
+    start = tree[0]
+
+    for node in tree:
+        pass
+        # add nodes
+
+    return get_magnitude(result)
 
 
 def main(filename: str) -> int:
