@@ -1,33 +1,34 @@
 # Part 1: Add up all of the snailfish numbers from the homework assignment in
 # the order they appear. What is the magnitude of the final sum?
 import ast
-import pprint as p
-from collections import Counter
-from collections import defaultdict
 
 import pyperclip as pyp  # type: ignore
 import pytest
 
 
 class Node:
-    def __init__():
-        pass
+    def __init__(self, left, right, value):
+        self.left = left
+        self.right = right
+        self.value = value
+
+
+def build_tree(num: Node | object) -> Node:
+    if isinstance(num, int):
+        return Node(None, None, num)
+
+    left = num
+    right = num
+    return Node(build_tree(left), build_tree(right), None)
 
 
 # Part 1
 def calculate_homework(data: list[object]) -> int:
-    # Turn numbers into nodes on a bintree
-    tree = []
-    for num in data:
-        tree.append(Node(num))
+    tree: list[Node] = []
+    for item in data:
+        tree.append(build_tree(item))
 
-    start = tree[0]
-
-    for node in tree:
-        pass
-        # add nodes
-
-    return get_magnitude(result)
+    return 0
 
 
 def main(filename: str) -> int:
