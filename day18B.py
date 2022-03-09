@@ -2,7 +2,7 @@
 # the order they appear. What is the magnitude of the final sum?
 import ast
 
-import pyperclip as pyp  # type: ignore
+import pyperclip as pyp
 import pytest
 
 
@@ -12,14 +12,73 @@ class Node:
         self.right = right
         self.value = value
 
+    def is_empty(self):
+        return self.value is None and not self.left and not self.right
+
+    def is_leaf(self):
+        return not self.left and not self.right
+
+    def __add__(self, other):
+        # a.__add__(b) is like doing a + b
+        if not isinstance(other, Node):
+            raise ValueError(f"Cannot add values of type Node and {type(other)}...")
+
+        if self.is_empty():
+            return other.copy()
+        else:
+            # Create a new parent node with self and other as the children
+            result = Node(self.copy(), other.copy(), None)
+
+            while True:
+                # reduce instructions
+                exploded, _ = result.explode()
+
+                if not exploded:
+                    if not result.split():
+                        break
+
+            return result
+
+    def explode() -> None:
+        ...
+
+    def split_side(self, side: str) -> Node:
+        side_node = getattr(self, side)
+
+        if side_node.is_leaf():
+            if side_node.value >= 10:
+                setattr(
+                    self,
+                    side,
+                    build_tree(
+                        [
+                            side_node.value // 2,
+                            (side_node.value + 1) // 2,
+                        ]
+                    ),
+                )
+                return True
+
+            else:
+                return False
+
+        else:
+            return side_node.split()
+
+    def split(self) -> Node:
+        return self.split_side("left") or self.split_side("right")
+
 
 def build_tree(num: Node | object) -> Node:
     if isinstance(num, int):
         return Node(None, None, num)
+    else:
+        left, right = num
+        return Node(build_tree(left), build_tree(right), None)
 
-    left = num
-    right = num
-    return Node(build_tree(left), build_tree(right), None)
+
+def get_magnitude(n):
+    ...
 
 
 # Part 1
@@ -28,7 +87,8 @@ def calculate_homework(data: list[object]) -> int:
     for item in data:
         tree.append(build_tree(item))
 
-    return 0
+    final_num = sum(tree, start=Node())
+    return get_magnitude(final_num)
 
 
 def main(filename: str) -> int:
