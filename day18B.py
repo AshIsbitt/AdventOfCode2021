@@ -7,7 +7,6 @@ from typing import Optional
 from typing import Union
 
 import pyperclip as pyp
-import pytest
 
 
 class Blast:
@@ -201,32 +200,3 @@ def main(filename: str) -> int:
 if __name__ == "__main__":
     # raise SystemExit(main("input_ff/day18.txt"))
     raise SystemExit(main("input_sri/day18.txt"))
-
-
-# Tests
-test_data = """
-"""
-
-
-# Part 1 test
-@pytest.mark.parametrize(
-    ("input_data", "expected"),
-    [
-        (test_data, 0),
-    ],
-)
-def test_calculate_homework(input_data: Any, expected: int) -> None:
-    assert calculate_homework(input_data) == expected
-
-
-# Part 2 test
-"""
-@pytest.mark.parametrize(
-    ("input_data", "expected"),
-    [
-        (test_data, 0),
-    ]
-)
-def test_f(input_data, expected):
-    assert f(input_data) == expected
-"""
