@@ -1,8 +1,10 @@
 # Part 1: Add up all of the snailfish numbers from the homework assignment in
 # the order they appear. What is the magnitude of the final sum?
+# Inspired by: https://github.com/alexander-yu/adventofcode/blob/master/problems_2021/18.py
 import ast
 from typing import Any
 from typing import Optional
+from typing import Union
 
 import pyperclip as pyp
 import pytest
@@ -52,7 +54,18 @@ class Node:
     def is_leaf(self) -> bool:
         return not self.left and not self.right
 
-    def absorb_blast(self, blast, side, depth) -> Blast:
+    def add_value(self, value: "Node", side: str) -> None:
+        current = self
+        while not current.is_leaf():
+            current = getattr(current, side)
+
+        if not current.value:
+            current.value = 0
+
+        assert value.value is not None
+        current.value += value.value
+
+    def absorb_blast(self, blast: Blast, side: str, depth: int) -> Blast:
         if blast == Node(None, None, None):
             return blast
 
@@ -69,14 +82,17 @@ class Node:
         setattr(blast, other_side, None)
         return blast
 
-    def explode(self, depth: int = 0) -> tuple[bool, "Node"]:
+    def explode(self, depth: int = 0) -> tuple[bool, Union["Node", Blast]]:
         if self.is_leaf():
             # If a node has no left or right, it's at the bottom
             return False, Node(None, None, None)
 
         if depth == 4:
             # If a node is 4 deep, it's meant to explode
-            return True, Node(self.left.value, self.right.value, None)
+            assert self.left is not None
+            assert self.right is not None
+
+            return True, Node(self.left, self.right, None)
 
         for side in ["left", "right"]:
             # Check the left and right children of the node
@@ -89,7 +105,7 @@ class Node:
 
         return False, Blast(None, None)
 
-    def split_side(self, side: str) -> bool | "Node":
+    def split_side(self, side: str) -> Union[bool, "Node"]:
         side_node = getattr(self, side)
 
         if side_node.is_leaf():
@@ -112,7 +128,7 @@ class Node:
         else:
             return side_node.split()
 
-    def split(self) -> "Node":
+    def split(self) -> Union["Node", bool]:
         return self.split_side("left") or self.split_side("right")
 
     def copy(self) -> "Node":
@@ -123,18 +139,28 @@ class Node:
         )
 
 
-def build_tree(num: Node | object) -> Node:
+def build_tree(num: Any) -> Node:
     if isinstance(num, int):
         return Node(None, None, num)
     else:
-        left, right = num
+
+        if isinstance(num, Node):
+            left = num.left
+            right = num.right
+        else:
+            left, right = num
+
         return Node(build_tree(left), build_tree(right), None)
 
 
-def get_magnitude(num: Optional["Node"]) -> int:
+def get_magnitude(num: "Node") -> int:
+
     if num.is_leaf():
+        assert isinstance(num.value, int)
         return num.value
     else:
+        assert isinstance(num.left, Node)
+        assert isinstance(num.right, Node)
         return (3 * get_magnitude(num.left)) + (2 * get_magnitude(num.right))
 
 
