@@ -7,6 +7,7 @@ from typing import Optional
 from typing import Union
 
 import pyperclip as pyp
+import pytest
 
 
 class Blast:
@@ -212,11 +213,8 @@ test_data = """[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
 [[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
 [[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]"""
 
-@pytest.mark.parametrize(
-    ("input", "expected"),
-    (
-        (test_data, 4140),
-    )
-)
-def test_calculate_homework(input:str, expected:int) -> None:
-    assert calculate_homework(input) == expected
+
+@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 4140),))
+def test_calculate_homework(input_data: str, expected: int) -> None:
+    lst = [ast.literal_eval(itm) for itm in input_data.splitlines()]
+    assert calculate_homework(lst) == expected
