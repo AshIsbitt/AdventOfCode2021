@@ -1,5 +1,7 @@
 # Part 1: Add up all of the snailfish numbers from the homework assignment in
 # the order they appear. What is the magnitude of the final sum?
+# Part 2: What is the largest magnitude of any sum of two different snailfish
+# numbers from the homework assignment?
 # Inspired by: https://github.com/alexander-yu/adventofcode/blob/master/problems_2021/18.py
 import ast
 from typing import Any
@@ -174,6 +176,11 @@ def calculate_homework(data: list[object]) -> int:
     return get_magnitude(final_num)
 
 
+# Part 2
+def find_two_nums(data: list[object]) -> int:
+    return 0
+
+
 def main(filename: str) -> int:
     raw_data: list[object] = []
 
@@ -191,9 +198,9 @@ def main(filename: str) -> int:
     pyp.copy(p1)
     print(f"Part 1: {p1}")
 
-    # p2 = 0
-    # pyp.copy(p2)
-    # print(f"Part 2: {p2}")
+    p2 = find_two_nums(raw_data)
+    pyp.copy(p2)
+    print(f"Part 2: {p2}")
 
     return 0
 
@@ -201,6 +208,7 @@ def main(filename: str) -> int:
 if __name__ == "__main__":
     # raise SystemExit(main("input_ff/day18.txt"))
     raise SystemExit(main("input_sri/day18.txt"))
+
 
 test_data = """[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
 [[[5,[2,8]],4],[5,[[9,9],0]]]
@@ -214,7 +222,23 @@ test_data = """[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
 [[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]"""
 
 
-@pytest.mark.parametrize(("input_data", "expected"), ((test_data, 4140),))
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        (test_data, 4140),
+    ],
+)
 def test_calculate_homework(input_data: str, expected: int) -> None:
     lst = [ast.literal_eval(itm) for itm in input_data.splitlines()]
     assert calculate_homework(lst) == expected
+
+
+@pytest.mark.parametrize(
+    ("input_data", "expected"),
+    [
+        (test_data, 3993),
+    ],
+)
+def test_find_two_nums(input_data: str, expected: int) -> None:
+    lst = [ast.literal_eval(itm) for itm in input_data.splitlines()]
+    assert find_two_nums(lst) == expected
