@@ -4,6 +4,7 @@
 # numbers from the homework assignment?
 # Inspired by: https://github.com/alexander-yu/adventofcode/blob/master/problems_2021/18.py
 import ast
+import itertools
 from typing import Any
 from typing import Optional
 from typing import Union
@@ -178,7 +179,21 @@ def calculate_homework(data: list[object]) -> int:
 
 # Part 2
 def find_two_nums(data: list[object]) -> int:
-    return 0
+    tree: list[Node] = []
+    for item in data:
+        tree.append(build_tree(item))
+
+    print([i.value for i in tree])
+    all_pairs = [
+        n1.value + n2.value
+        if n1.value and n2.value is not None
+        else Node(None, None, 0)
+        for n1, n2 in itertools.permutations(tree, 2)
+    ]
+
+    # print(i.value for i in all_pairs)
+    ret = max(all_pairs, key=lambda x: x.value)
+    return ret.value
 
 
 def main(filename: str) -> int:
