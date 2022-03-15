@@ -4,6 +4,7 @@
 # numbers from the homework assignment?
 # Inspired by: https://github.com/alexander-yu/adventofcode/blob/master/problems_2021/18.py
 import ast
+import itertools
 from dataclasses import dataclass
 from typing import Any
 from typing import Optional
@@ -11,8 +12,6 @@ from typing import Union
 
 import pyperclip as pyp
 import pytest
-
-# import itertools
 
 
 @dataclass
@@ -176,19 +175,14 @@ def calculate_homework(data: list[object]) -> int:
 
 # Part 2
 def find_two_nums(data: list[object]) -> int:
-    return 0
+    tree: list[Node] = []
+    for item in data:
+        tree.append(build_tree(item))
 
+    all_pairs = [get_magnitude(n1 + n2) for n1, n2 in itertools.permutations(tree, 2)]
+    # reveal_type(all_pairs)
 
-#    tree: list[Node] = []
-#    for item in data:
-#        tree.append(build_tree(item))
-#
-#    all_pairs = [n1 + n2 for n1, n2 in itertools.permutations(tree, 2)]
-#
-#    ret = max(all_pairs, key=lambda x: x.value)
-#
-#    assert isinstance(ret.value, int)
-#    return ret.value
+    return max(all_pairs)
 
 
 def main(filename: str) -> int:
