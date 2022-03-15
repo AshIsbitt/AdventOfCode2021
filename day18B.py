@@ -4,7 +4,7 @@
 # numbers from the homework assignment?
 # Inspired by: https://github.com/alexander-yu/adventofcode/blob/master/problems_2021/18.py
 import ast
-import itertools
+from dataclasses import dataclass
 from typing import Any
 from typing import Optional
 from typing import Union
@@ -12,23 +12,29 @@ from typing import Union
 import pyperclip as pyp
 import pytest
 
+# import itertools
 
+
+@dataclass
 class Blast:
-    def __init__(self, left: Optional["Node"], right: Optional["Node"]) -> None:
-        self.left = left
-        self.right = right
+    left: Optional[int] = None
+    right: Optional[int] = None
 
 
-blast = Blast(None, None)
+EMPTY = Blast()
 
 
+@dataclass
 class Node:
-    def __init__(
-        self, left: Optional["Node"], right: Optional["Node"], value: Optional[int]
-    ) -> None:
-        self.left = left
-        self.right = right
-        self.value = value
+    left: Optional["Node"] = None
+    right: Optional["Node"] = None
+    value: Optional[int] = None
+
+    def is_leaf(self) -> bool:
+        return not self.left and not self.right
+
+    def is_empty(self) -> Optional[int]:
+        return self.value is None and not self.left and not self.right
 
     def __add__(self, other: "Node") -> "Node":
         # a.__add__(b) is like doing a + b
@@ -37,27 +43,21 @@ class Node:
 
         if self.is_empty():
             return other.copy()
-        else:
-            # Create a new parent node with self and other as the children
-            result = Node(self.copy(), other.copy(), None)
 
-            while True:
-                # reduce instructions
-                exploded, _ = result.explode()
+        # Create a new parent node with self and other as the children
+        result = Node(left=self.copy(), right=other.copy())
 
-                if not exploded:
-                    if not result.split():
-                        break
+        while True:
+            # reduce instructions
+            exploded, _ = result.explode()
 
-            return result
+            if not exploded:
+                if not result.split():
+                    break
 
-    def is_empty(self) -> Optional[int]:
-        return self.value is None and not self.left and not self.right
+        return result
 
-    def is_leaf(self) -> bool:
-        return not self.left and not self.right
-
-    def add_value(self, value: "Node", side: str) -> None:
+    def add_value(self, value: int, side: str) -> None:
         current = self
         while not current.is_leaf():
             current = getattr(current, side)
@@ -65,15 +65,14 @@ class Node:
         if not current.value:
             current.value = 0
 
-        assert value.value is not None
-        current.value += value.value
+        current.value += value
 
     def absorb_blast(self, blast: Blast, side: str, depth: int) -> Blast:
-        if blast == Node(None, None, None):
-            return blast
+        if blast == EMPTY:
+            return EMPTY
 
-        if depth == 3:
-            crater = Node(None, None, 0)
+        if depth == 1:
+            crater = Node(value=0)
             setattr(self, side, crater)
 
         other_side = "left" if side == "right" else "right"
@@ -85,28 +84,28 @@ class Node:
         setattr(blast, other_side, None)
         return blast
 
-    def explode(self, depth: int = 0) -> tuple[bool, Union["Node", Blast]]:
+    def explode(self, depth: int = 4) -> tuple[bool, Union["Node", Blast]]:
         if self.is_leaf():
             # If a node has no left or right, it's at the bottom
-            return False, Node(None, None, None)
+            return False, EMPTY
 
-        if depth == 4:
+        if depth == 0:
             # If a node is 4 deep, it's meant to explode
             assert self.left is not None
             assert self.right is not None
 
-            return True, Node(self.left, self.right, None)
+            return True, Blast(left=self.left.value, right=self.right.value)
 
         for side in ["left", "right"]:
             # Check the left and right children of the node
-            exploded, blast = getattr(self, side).explode(depth + 1)
+            exploded, blast = getattr(self, side).explode(depth=depth - 1)
 
             if exploded:
                 # Perform the actual maths on the explode operation
                 blast = self.absorb_blast(blast, side, depth)
                 return True, blast
 
-        return False, Blast(None, None)
+        return False, EMPTY
 
     def split_side(self, side: str) -> Union[bool, "Node"]:
         side_node = getattr(self, side)
@@ -116,20 +115,18 @@ class Node:
                 setattr(
                     self,
                     side,
+                    # Maybe this doesn't work?
                     build_tree(
                         [
                             side_node.value // 2,
                             (side_node.value + 1) // 2,
                         ]
                     ),
+                    # down to here
                 )
                 return True
-
-            else:
-                return False
-
-        else:
-            return side_node.split()
+            return False
+        return side_node.split()
 
     def split(self) -> Union["Node", bool]:
         return self.split_side("left") or self.split_side("right")
@@ -156,8 +153,8 @@ def build_tree(num: Any) -> Node:
         return Node(build_tree(left), build_tree(right), None)
 
 
+# __abs__
 def get_magnitude(num: "Node") -> int:
-
     if num.is_leaf():
         assert isinstance(num.value, int)
         return num.value
@@ -179,17 +176,19 @@ def calculate_homework(data: list[object]) -> int:
 
 # Part 2
 def find_two_nums(data: list[object]) -> int:
-    tree: list[Node] = []
-    for item in data:
-        tree.append(build_tree(item))
+    return 0
 
-    all_pairs = [n1 + n2 for n1, n2 in itertools.permutations(tree, 2)]
 
-    print([i.value for i in all_pairs])
-    ret = max(all_pairs, key=lambda x: x.value)
-
-    assert isinstance(ret.value, int)
-    return ret.value
+#    tree: list[Node] = []
+#    for item in data:
+#        tree.append(build_tree(item))
+#
+#    all_pairs = [n1 + n2 for n1, n2 in itertools.permutations(tree, 2)]
+#
+#    ret = max(all_pairs, key=lambda x: x.value)
+#
+#    assert isinstance(ret.value, int)
+#    return ret.value
 
 
 def main(filename: str) -> int:
